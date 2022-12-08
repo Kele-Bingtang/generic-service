@@ -1,0 +1,31 @@
+server:
+  port: 8095
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/generic?useSSL-=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: YoungKbt1234
+    type: com.alibaba.druid.pool.DruidDataSource
+    
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+dbdtobean:
+  author-name: Kele-Bingtang
+  mvc:
+    entity-location: cn.youngkbt.entity
+    controller-location: cn.youngkbt.controller
+    service-location: cn.youngkbt.service
+    mapper-location: cn.youngkbt.mapper
+    generate-request-body: true
+    generate-curd: true
+  comment:
+    all-comments: true
+  base:
+    lower-camel-case: true
+
+logging:
+  config: classpath:log.xml

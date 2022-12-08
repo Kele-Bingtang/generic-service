@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <!-- 读取 application.yml 内容 -->
+    <springProperty scop="context" name="logPath" source="log.path"/>
+    <springProperty scop="context" name="appName" source="app.name"/>
+    <springProperty scop="context" name="env" source="spring.profiles.active"/>
+    <springProperty scope="context" name="kafka.server" source="spring.kafka.bootstrap-servers"/>
+    <springProperty scope="context" name="kafka.log.topic.info" source="spring.kafka.log.topic.info"/>
+    <springProperty scope="context" name="kafka.log.topic.error" source="spring.kafka.log.topic.error"/>
+    <springProperty scope="context" name="kafka.retries" source="spring.kafka.producer.retries"/>
+    <springProperty scope="context" name="kafka.acks" source="spring.kafka.producer.acks"/>
+    <springProperty scope="context" name="kafka.batchSize" source="spring.kafka.producer.batch-size"/>
+    <springProperty scope="context" name="kafka.lingerMs" source="spring.kafka.producer.properties.linger.ms"/>
+    <springProperty scope="context" name="kafka.keySerializer" source="spring.kafka.producer.key-serializer"/>
+    <springProperty scope="context" name="kafka.valueSerializer" source="spring.kafka.producer.value-serializer"/>
+
+    <!-- 彩色日志依赖的渲染类 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+    <!-- 彩色日志格式 -->
+    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+
+    <!--控制台打印-->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread] %logger{5}[%L] %msg%n</pattern>-->
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <appender name="FILE_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${logPath}/${appName}-info.log</File>
+        <!--日志格式-->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread] %logger{5}[%L] %msg%n</pattern>
+        </encoder>
+        <!--日志记录等级-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${logPath}/${appName}/%d{yyyy-MM-dd}-info.log</FileNamePattern>
+            <!--日志文件保留天数 -->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <!--日志文件最大的大小 -->
+        <triggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <!-- 文件大小触发重写新文件 -->
+            <MaxFileSize>100MB</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+    <appender name="FILE_ERROR"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${logPath}/${appName}-error.log</File>
+        <!--日志格式-->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread] %logger{5}[%L] %msg%n</pattern>
+        </encoder>
+        <!--日志记录等级-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${logPath}/${appName}/%d{yyyy-MM-dd}-error.log</FileNamePattern>
+            <!--日志文件保留天数 -->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <!--日志文件最大的大小 -->
+        <triggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <!-- 文件大小触发重写新文件 -->
+            <MaxFileSize>100MB</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+    <appender name="SYNC_KAFKA" class="com.github.danielwegener.logback.kafka.KafkaAppender">
+        <encoder>
+            <pattern>${appName}-${env}- %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <topic>${kafka.log.topic.info}</topic>
+        <keyingStrategy class="com.github.danielwegener.logback.kafka.keying.NoKeyKeyingStrategy"/>
+        <deliveryStrategy class="com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy"/>
+        <producerConfig>bootstrap.servers=${kafka.server}</producerConfig>
+        <producerConfig>retries=${kafka.retries}</producerConfig>
+        <producerConfig>batch.size=${kafka.batchSize}</producerConfig>
+        <producerConfig>linger.ms=${kafka.lingerMs}</producerConfig>
+        <producerConfig>acks=${kafka.acks}</producerConfig>
+        <producerConfig>buffer.memory=33554432</producerConfig>
+        <appender-ref ref="CONSOLE"/>
+    </appender>
+
+    <appender name="SYNC_KAFKA_ERROR" class="ch.qos.logback.classic.AsyncAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <appender-ref ref="SYNC_KAFKA"/>
+    </appender>
+
+    <appender name="SYNC_KAFKA_INFO" class="ch.qos.logback.classic.AsyncAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <appender-ref ref="SYNC_KAFKA"/>
+    </appender>
+
+    <springProfile name="dev,test">
+        <logger name="org.springframework.web" level="INFO"/>
+        <logger name="org.springboot.sample" level="INFO" />
+        <logger name="com.pxw.mit" level="DEBUG" />
+        <logger name="org.apache.kafka" level="DEBUG"/>
+        <logger name="org.apache.zookeeper" level="DEBUG"/>
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="FILE_INFO" />
+            <appender-ref ref="FILE_ERROR" />
+            <appender-ref ref="SYNC_KAFKA_INFO" />
+            <appender-ref ref="SYNC_KAFKA_ERROR" />
+        </root>
+    </springProfile>
+
+    <springProfile name="prod">
+        <logger name="org.springframework.web" level="ERROR"/>
+        <logger name="org.springboot.sample" level="ERROR" />
+        <logger name="com.pxw.mit" level="INFO" />
+        <logger name="org.apache.kafka" level="INFO"/>
+        <logger name="org.apache.zookeeper" level="INFO"/>
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="FILE_INFO" />
+            <appender-ref ref="FILE_ERROR" />
+            <appender-ref ref="SYNC_KAFKA_INFO" />
+            <appender-ref ref="SYNC_KAFKA_ERROR" />
+        </root>
+    </springProfile>
+
+</configuration>
