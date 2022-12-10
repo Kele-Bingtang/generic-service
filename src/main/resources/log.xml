@@ -208,7 +208,7 @@
     <!-- 4.1 开发环境：打印控制台-->
     <springProfile name="dev">
         <!-- 修改此处的扫描包名，指定这个包的日志级别最低下限 -->
-        <logger name="com.glyxybxhtxt.controller" level="debug"/>
+        <logger name="cn.youngkbt.generic" level="debug"/>
         <!-- logger 的 level 是一个下限，所有大于这个下限的日志级别都会输出 -->
     </springProfile>
 
@@ -222,10 +222,10 @@
             如果 appender 里指定了 level，则只按照 appender 里的 level 进行输出。
          -->
         <appender-ref ref="CONSOLE" />
-        <appender-ref ref="DEBUG_FILE" />
-        <appender-ref ref="INFO_FILE" />
-        <appender-ref ref="WARN_FILE" />
-        <appender-ref ref="ERROR_FILE" />
+        <!--<appender-ref ref="DEBUG_FILE" />-->
+        <!--<appender-ref ref="INFO_FILE" />-->
+        <!--<appender-ref ref="WARN_FILE" />-->
+        <!--<appender-ref ref="ERROR_FILE" />-->
     </root>
 
     <!-- 4.2 生产环境:输出到文档
