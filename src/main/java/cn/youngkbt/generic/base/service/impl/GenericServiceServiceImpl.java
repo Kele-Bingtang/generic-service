@@ -1,21 +1,28 @@
 package cn.youngkbt.generic.base.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import cn.youngkbt.generic.base.mapper.GenericServiceMapper;
 import cn.youngkbt.generic.base.model.GenericReport;
+import cn.youngkbt.generic.base.model.GenericService;
 import cn.youngkbt.generic.base.model.ServiceCol;
 import cn.youngkbt.generic.base.service.GenericReportService;
 import cn.youngkbt.generic.base.service.GenericServiceService;
-import cn.youngkbt.generic.base.model.GenericService;
-import cn.youngkbt.generic.base.mapper.GenericServiceMapper;
 import cn.youngkbt.generic.base.service.ServiceColService;
 import cn.youngkbt.generic.exception.ConditionSqlException;
+import cn.youngkbt.generic.utils.SecurityUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Kele-Bingtang
@@ -24,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class GenericServiceServiceImpl implements GenericServiceService {
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private GenericServiceMapper genericServiceMapper;
@@ -31,6 +39,8 @@ public class GenericServiceServiceImpl implements GenericServiceService {
     private GenericReportService genericReportService;
     @Autowired
     private ServiceColService serviceColService;
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public List<GenericService> queryGenericServiceByConditions(QueryWrapper<GenericService> queryWrapper) {
@@ -43,19 +53,41 @@ public class GenericServiceServiceImpl implements GenericServiceService {
 
     @Override
     public List<GenericService> queryGenericServiceList(GenericService genericService) {
+        String key = SecurityUtils.getUsername() + "_service_" + genericService.toString();
+        // 从 Redis 拿缓存
+        Object o = redisTemplate.opsForValue().get(key);
+        if(o instanceof List) {
+            List<GenericService> serviceList = (List<GenericService>) o;
+            LOGGER.info("从 Redis 拿到数据：{}", serviceList);
+            return serviceList;
+        }
         QueryWrapper<GenericService> queryWrapper = new QueryWrapper<>();
         // 如果 genericCategory 没有数据，则返回全部数据
         queryWrapper.setEntity(genericService);
-        return genericServiceMapper.selectList(queryWrapper);
+        List<GenericService> serviceList = genericServiceMapper.selectList(queryWrapper);
+        // 存入 Redis
+        redisTemplate.opsForValue().set(key, serviceList, 24, TimeUnit.HOURS);
+        return serviceList;
     }
 
     @Override
     public IPage<GenericService> queryGenericServiceListPages(IPage<GenericService> page, GenericService genericService) {
+        String key = SecurityUtils.getUsername() + "_service_" + page.getCurrent() + "_" + page.getSize() + "_" + genericService.toString();
+        // 从 Redis 拿缓存
+        Object o = redisTemplate.opsForValue().get(key);
+        if(o instanceof List) {
+            IPage<GenericService> servicePage = (IPage<GenericService>) o;
+            LOGGER.info("从 Redis 拿到数据：{}", servicePage);
+            return servicePage;
+        }
         QueryWrapper<GenericService> queryWrapper = new QueryWrapper<>();
         // 如果 genericCategory 没有数据，则返回全部数据
         queryWrapper.setEntity(genericService);
         try {
-            return genericServiceMapper.selectPage(page, queryWrapper);
+            IPage<GenericService> servicePage = genericServiceMapper.selectPage(page, queryWrapper);
+            // 存入 Redis
+            redisTemplate.opsForValue().set(key, servicePage, 24, TimeUnit.HOURS);
+            return servicePage;
         } catch (Exception e) {
             throw new ConditionSqlException();
         }
@@ -75,6 +107,8 @@ public class GenericServiceServiceImpl implements GenericServiceService {
         int i = genericServiceMapper.insert(genericService);
         if (i == 0) {
             return null;
+        } else {
+            this.deleteCachedKeys();
         }
         return genericService;
     }
@@ -84,6 +118,8 @@ public class GenericServiceServiceImpl implements GenericServiceService {
         int i = genericServiceMapper.updateById(genericService);
         if (i == 0) {
             return null;
+        } else {
+            this.deleteCachedKeys();
         }
         return genericService;
     }
@@ -102,6 +138,8 @@ public class GenericServiceServiceImpl implements GenericServiceService {
         int i = genericServiceMapper.deleteById(genericService);
         if (i == 0) {
             return null;
+        } else {
+            this.deleteCachedKeys();
         }
         return genericService;
     }
@@ -122,7 +160,11 @@ public class GenericServiceServiceImpl implements GenericServiceService {
                 serviceColService.deleteServiceColByIds(ids);
             }
         }
-        return genericServiceMapper.delete(queryWrapper);
+        int i = genericServiceMapper.delete(queryWrapper);
+        if(i > 0) {
+            this.deleteCachedKeys();
+        }
+        return i;
     }
 
     @Override
@@ -132,7 +174,20 @@ public class GenericServiceServiceImpl implements GenericServiceService {
         genericReportService.deleteGenericReportByIds(ids);
         // 删除 ServiceCol
         serviceColService.deleteServiceColByIds(ids);
-        return genericServiceMapper.deleteBatchIds(ids);
+        int i = genericServiceMapper.deleteBatchIds(ids);
+        if(i > 0) {
+            this.deleteCachedKeys();
+        }
+        return i;
     }
 
+    public void deleteCachedKeys() {
+        Set<String> keys = redisTemplate.keys(SecurityUtils.getUsername() + "_service_*");
+        if(null != keys) {
+            Long delete = redisTemplate.delete(keys);
+            if(null != delete) {
+                LOGGER.info("删除了 {} 个 key", delete);
+            }
+        }
+    }
 }

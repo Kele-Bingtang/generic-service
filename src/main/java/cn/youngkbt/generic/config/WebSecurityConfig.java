@@ -1,8 +1,8 @@
 package cn.youngkbt.generic.config;
 
+import cn.youngkbt.generic.security.JwtAuthenticationFilter;
 import cn.youngkbt.generic.security.LoginFailureHandler;
 import cn.youngkbt.generic.security.LoginSuccessHandler;
-import cn.youngkbt.generic.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;

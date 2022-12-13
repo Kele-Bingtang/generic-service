@@ -4,9 +4,11 @@ import cn.youngkbt.generic.security.JwtAuthenticationToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
@@ -17,30 +19,42 @@ import java.util.*;
  * @date 2022/12/10 21:37
  * @note JWT 工具类
  */
+@Component
 public class JwtTokenUtils implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * 用户名称，可自定义，或者获取官方提供
+     * 默认值：Claims.SUBJECT
      */
-    private static final String USERNAME = Claims.SUBJECT;
+    private static String USERNAME;
     /**
      * 创建时间
      */
-    private static final String CREATED = "created";
+    private static String CREATED;
     /**
      * 权限列表
      */
-    private static final String AUTHORITIES = "authorities";
+    private static String AUTHORITIES;
     /**
      * 密钥，自定义，根据密钥生成 token，或还原 token
      */
-    private static final String SECRET = "generic";
+    private static String SECRET;
     /**
-     * 有效期 12 小时
+     * 有效期 12 小时：12 * 60 * 60 * 1000
      */
-    private static final long EXPIRE_TIME = 12 * 60 * 60 * 1000;
+    private static long EXPIRE_TIME;
+
+    public JwtTokenUtils(@Value("${jwt-token.username:sub}") String username, @Value("${jwt-token.created:created}") String created, 
+                         @Value("${jwt-token.authorities:authorities}") String authorities, @Value("${jwt-token.secret-key:generic}") String secretKey,
+                         @Value("${jwt-token.expire-time:#{12 * 60 * 60 * 1000}}") Long expireTime) {
+        JwtTokenUtils.USERNAME = username;
+        JwtTokenUtils.CREATED = created;
+        JwtTokenUtils.AUTHORITIES = authorities;
+        JwtTokenUtils.SECRET = secretKey;
+        JwtTokenUtils.EXPIRE_TIME = expireTime;
+    }
 
     /**
      * 生成令牌

@@ -1,7 +1,7 @@
-package cn.youngkbt.generic.intercept;
+package cn.youngkbt.generic.log;
 
-import cn.youngkbt.generic.utils.SecureUtil;
-import cn.youngkbt.generic.utils.StringUtil;
+import cn.youngkbt.generic.utils.SecureUtils;
+import cn.youngkbt.generic.utils.StringUtils;
 import org.slf4j.MDC;
 import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -20,9 +20,9 @@ public class LogInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        String tid = SecureUtil.noBarUUID();
+        String tid = SecureUtils.noBarUUID();
         // 可以考虑让客户端传入链路 ID，但需保证一定的复杂度唯一性；如果没使用默认 UUID 自动生成
-        if (!StringUtil.isEmpty(request.getHeader(TRACE_ID))) {
+        if (StringUtils.isNotBlank(request.getHeader(TRACE_ID))) {
             tid = request.getHeader(TRACE_ID);
         }
         MDC.put(TRACE_ID, tid);

@@ -8,6 +8,8 @@ import cn.youngkbt.generic.base.service.GenericUserService;
 import cn.youngkbt.generic.exception.ConditionSqlException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,7 @@ import java.util.List;
  */
 @Service
 public class GenericUserServiceImpl implements GenericUserService {
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private GenericUserMapper genericUserMapper;

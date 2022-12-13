@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/generic?useSSL-=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: YoungKbt1234
+    type: com.alibaba.druid.pool.DruidDataSource
+  redis:
+    database: 1
+    host: 8.129.212.155
+    #    host: localhost
+    port: 6379
+    timeout: 500
+    password: chenyicai0819
+  
+  dbdtobean:
+    author-name: Kele-Bingtang
+    mvc:
+      entity-location: cn.youngkbt.entity
+      controller-location: cn.youngkbt.controller
+      service-location: cn.youngkbt.service
+      mapper-location: cn.youngkbt.mapper
+      generate-request-body: true
+      generate-curd: true
+    comment:
+      all-comments: true
+    base:
+      lower-camel-case: true

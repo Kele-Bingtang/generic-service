@@ -7,6 +7,8 @@ import cn.youngkbt.generic.base.model.GenericReport;
 import cn.youngkbt.generic.base.mapper.GenericReportMapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class GenericReportServiceImpl implements GenericReportService {
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private GenericReportMapper genericReportMapper;

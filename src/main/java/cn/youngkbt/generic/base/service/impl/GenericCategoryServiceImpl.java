@@ -1,19 +1,26 @@
 package cn.youngkbt.generic.base.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import cn.youngkbt.generic.base.mapper.GenericCategoryMapper;
+import cn.youngkbt.generic.base.model.GenericCategory;
 import cn.youngkbt.generic.base.model.GenericService;
 import cn.youngkbt.generic.base.service.GenericCategoryService;
-import cn.youngkbt.generic.base.model.GenericCategory;
-import cn.youngkbt.generic.base.mapper.GenericCategoryMapper;
 import cn.youngkbt.generic.base.service.GenericServiceService;
 import cn.youngkbt.generic.exception.ConditionSqlException;
+import cn.youngkbt.generic.utils.SecurityUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Kele-Bingtang
@@ -22,12 +29,16 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class GenericCategoryServiceImpl implements GenericCategoryService {
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private GenericCategoryMapper genericCategoryMapper;
 
     @Autowired
     private GenericServiceService genericServiceService;
+
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public List<GenericCategory> queryGenericCategoryByCondition(QueryWrapper<GenericCategory> queryWrapper) {
@@ -40,19 +51,41 @@ public class GenericCategoryServiceImpl implements GenericCategoryService {
 
     @Override
     public List<GenericCategory> queryGenericCategoryList(GenericCategory genericCategory) {
+        String key = SecurityUtils.getUsername() + "_category_" + genericCategory.toString();
+        // 从 Redis 拿缓存
+        Object o = redisTemplate.opsForValue().get(key);
+        if (o instanceof List) {
+            List<GenericCategory> categoryPage = (List<GenericCategory>) o;
+            LOGGER.info("从 Redis 拿到数据：{}", categoryPage);
+            return categoryPage;
+        }
         QueryWrapper<GenericCategory> queryWrapper = new QueryWrapper<>();
         // 如果 genericCategory 没有数据，则返回全部数据
         queryWrapper.setEntity(genericCategory);
-        return genericCategoryMapper.selectList(queryWrapper);
+        List<GenericCategory> categories = genericCategoryMapper.selectList(queryWrapper);
+        // 存入 Redis
+        redisTemplate.opsForValue().set(key, categories, 24, TimeUnit.HOURS);
+        return categories;
     }
 
     @Override
     public IPage<GenericCategory> queryGenericCategoryListPages(IPage<GenericCategory> page, GenericCategory genericCategory) {
+        String key = SecurityUtils.getUsername() + "_category_" + page.getCurrent() + "_" + page.getSize() + "_" + genericCategory.toString();
+        // 从 Redis 拿缓存
+        Object o = redisTemplate.opsForValue().get(key);
+        if (o instanceof IPage) {
+            IPage<GenericCategory> categoryPage = (IPage<GenericCategory>) o;
+            LOGGER.info("从 Redis 拿到数据：{}", categoryPage.getRecords());
+            return categoryPage;
+        }
         QueryWrapper<GenericCategory> queryWrapper = new QueryWrapper<>();
         // 如果 genericCategory 没有数据，则返回全部数据
         queryWrapper.setEntity(genericCategory);
         try {
-            return genericCategoryMapper.selectPage(page, queryWrapper);
+            IPage<GenericCategory> genericCategoryPage = genericCategoryMapper.selectPage(page, queryWrapper);
+            // 存入 Redis
+            redisTemplate.opsForValue().set(key, genericCategoryPage, 24, TimeUnit.HOURS);
+            return genericCategoryPage;
         } catch (Exception e) {
             throw new ConditionSqlException();
         }
@@ -72,6 +105,8 @@ public class GenericCategoryServiceImpl implements GenericCategoryService {
         int i = genericCategoryMapper.insert(genericCategory);
         if (i == 0) {
             return null;
+        } else {
+            this.deleteCachedKeys();
         }
         return genericCategory;
     }
@@ -81,6 +116,8 @@ public class GenericCategoryServiceImpl implements GenericCategoryService {
         int i = genericCategoryMapper.updateById(genericCategory);
         if (i == 0) {
             return null;
+        } else {
+            this.deleteCachedKeys();
         }
         return genericCategory;
     }
@@ -95,6 +132,8 @@ public class GenericCategoryServiceImpl implements GenericCategoryService {
         int i = genericCategoryMapper.deleteById(genericCategory);
         if (i == 0) {
             return null;
+        } else {
+            this.deleteCachedKeys();
         }
         return genericCategory;
     }
@@ -113,7 +152,11 @@ public class GenericCategoryServiceImpl implements GenericCategoryService {
                 genericServiceService.deleteGenericServiceByIds(ids);
             }
         }
-        return genericCategoryMapper.delete(queryWrapper);
+        int i = genericCategoryMapper.delete(queryWrapper);
+        if (i > 0) {
+            this.deleteCachedKeys();
+        }
+        return i;
     }
 
     @Override
@@ -121,7 +164,21 @@ public class GenericCategoryServiceImpl implements GenericCategoryService {
     public int deleteGenericServiceByIds(List<Integer> ids) {
         // 根据目录的主键删除接口
         genericServiceService.deleteGenericServiceByIds(ids);
-        return genericCategoryMapper.deleteBatchIds(ids);
+        int i = genericCategoryMapper.deleteBatchIds(ids);
+        if (i > 0) {
+            this.deleteCachedKeys();
+        }
+        return i;
+    }
+
+    public void deleteCachedKeys() {
+        Set<String> keys = redisTemplate.keys(SecurityUtils.getUsername() + "_category_*");
+        if (null != keys) {
+            Long delete = redisTemplate.delete(keys);
+            if (null != delete) {
+                LOGGER.info("删除了 {} 个 key", delete);
+            }
+        }
     }
 
 }

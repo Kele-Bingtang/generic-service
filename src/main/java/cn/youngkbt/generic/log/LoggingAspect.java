@@ -1,4 +1,4 @@
-package cn.youngkbt.generic.intercept;
+package cn.youngkbt.generic.log;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -43,7 +43,7 @@ public class LoggingAspect {
     /**
      * 匹配自己项目的 Rest、Service、Mapper 端点的切面
      */
-    @Pointcut("execution(* cn.youngkbt.base ..*.*(..))")
+    @Pointcut("execution(* cn.youngkbt.generic.base ..*.*(..))")
     public void applicationPackagePointcut() {
         // 方法为空，因为这只是一个切入点，实现在通知中。
     }

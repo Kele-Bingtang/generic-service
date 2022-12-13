@@ -4,7 +4,7 @@ import cn.youngkbt.generic.base.model.GenericProject;
 import cn.youngkbt.generic.base.service.GenericProjectService;
 import cn.youngkbt.generic.http.HttpResult;
 import cn.youngkbt.generic.http.Response;
-import cn.youngkbt.generic.utils.SearchUtil;
+import cn.youngkbt.generic.utils.SearchUtils;
 import cn.youngkbt.generic.valid.ValidList;
 import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -30,7 +30,7 @@ public class GenericProjectController {
 
 	@GetMapping("/queryGenericProjectByConditions")
 	public Response queryGenericProjectByConditions(@RequestBody List<ConditionVo> conditionVos) {
-		QueryWrapper<GenericProject> queryWrapper = SearchUtil.parseWhereSql(conditionVos, GenericProject.class);
+		QueryWrapper<GenericProject> queryWrapper = SearchUtils.parseWhereSql(conditionVos, GenericProject.class);
 		List<GenericProject> project = genericProjectService.queryGenericProjectByConditions(queryWrapper);
 		return HttpResult.ok(project);
 	}
@@ -48,10 +48,10 @@ public class GenericProjectController {
 		return HttpResult.ok(projectListPages);
 	}
 
-	@GetMapping("/queryGenericProjectPages")
-	public Response queryGenericProjectPages(@Validated @RequestBody(required = false) ValidList<ConditionVo> conditionVos, @RequestParam(defaultValue = "1", required = false) Integer pageNo, @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
+	@GetMapping("/queryGenericProjectConditionsPages")
+	public Response queryGenericProjectConditionsPages(@Validated @RequestBody(required = false) ValidList<ConditionVo> conditionVos, @RequestParam(defaultValue = "1", required = false) Integer pageNo, @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
 		IPage<GenericProject> page = new Page<>(pageNo, pageSize);
-		QueryWrapper<GenericProject> queryWrapper = SearchUtil.parseWhereSql(conditionVos, GenericProject.class);
+		QueryWrapper<GenericProject> queryWrapper = SearchUtils.parseWhereSql(conditionVos, GenericProject.class);
 		IPage<GenericProject> categoryList = genericProjectService.queryGenericProjectConditionsPages(page, queryWrapper);
 		return HttpResult.ok(categoryList);
 	}

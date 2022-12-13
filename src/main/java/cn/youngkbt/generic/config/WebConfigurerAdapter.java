@@ -1,6 +1,6 @@
 package cn.youngkbt.generic.config;
 
-import cn.youngkbt.generic.intercept.LogInterceptor;
+import cn.youngkbt.generic.log.LogInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

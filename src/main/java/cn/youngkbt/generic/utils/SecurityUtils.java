@@ -12,15 +12,19 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Kele-Bingtang
  * @date 2022/12/10 21:42
- * @note
+ * @note Spring Security 认证工具
  */
 public class SecurityUtils {
+    
+    private SecurityUtils() {
+    }
 
     /**
      * 系统登录认证
-     * @param request 客户端请求
-     * @param username 当前用户名
-     * @param password 当前用户密码
+     *
+     * @param request               客户端请求
+     * @param username              当前用户名
+     * @param password              当前用户密码
      * @param authenticationManager 认证对象
      * @return 认证后的用户信息，内容包括 token
      */
@@ -39,6 +43,7 @@ public class SecurityUtils {
 
     /**
      * 获取令牌进行认证
+     *
      * @param request 客户端请求
      */
     public static void checkAuthentication(HttpServletRequest request) {
@@ -50,6 +55,7 @@ public class SecurityUtils {
 
     /**
      * 从上下文获取当前用户名
+     *
      * @return 当前用户名
      */
     public static String getUsername() {
@@ -59,7 +65,7 @@ public class SecurityUtils {
             Object principal = authentication.getPrincipal();
             if (principal != null && principal instanceof UserDetails) {
                 username = ((UserDetails) principal).getUsername();
-            }else {
+            } else {
                 return String.valueOf(authentication);
             }
         }
@@ -68,6 +74,7 @@ public class SecurityUtils {
 
     /**
      * 从传入的认证信息中获取用户名
+     *
      * @return 用户名
      */
     public static String getUsername(Authentication authentication) {
@@ -76,6 +83,8 @@ public class SecurityUtils {
             Object principal = authentication.getPrincipal();
             if (principal != null && principal instanceof UserDetails) {
                 username = ((UserDetails) principal).getUsername();
+            } else {
+                return String.valueOf(authentication);
             }
         }
         return username;
@@ -83,6 +92,7 @@ public class SecurityUtils {
 
     /**
      * 从上下文获取当前登录信息
+     *
      * @return 当前登录信息
      */
     public static Authentication getAuthentication() {

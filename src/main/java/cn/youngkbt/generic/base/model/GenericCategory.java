@@ -29,6 +29,11 @@ public class GenericCategory {
     /**
      * 目录名称
      */
+    @NotBlank(message = "目录编码不能为空", groups = {CategoryInsert.class, CategoryUpdate.class})
+    private String categoryCode;
+    /**
+     * 目录名称
+     */
     @NotBlank(message = "目录名称不能为空", groups = {CategoryInsert.class, CategoryUpdate.class})
     private String categoryName;
     /**

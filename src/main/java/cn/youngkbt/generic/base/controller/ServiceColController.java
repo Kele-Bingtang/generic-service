@@ -1,21 +1,16 @@
 package cn.youngkbt.generic.base.controller;
 
-import java.util.List;
-
 import cn.youngkbt.generic.base.model.ServiceCol;
 import cn.youngkbt.generic.base.service.ServiceColService;
 import cn.youngkbt.generic.http.HttpResult;
 import cn.youngkbt.generic.http.Response;
-import cn.youngkbt.generic.utils.SearchUtil;
+import cn.youngkbt.generic.utils.SearchUtils;
 import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 /**
  * @author Kele-Bingtang
@@ -31,7 +26,7 @@ public class ServiceColController {
 
 	@GetMapping("/queryServiceColByConditions")
 	public Response queryServiceColByConditions(@RequestBody List<ConditionVo> conditionVos) {
-		QueryWrapper<ServiceCol> queryWrapper = SearchUtil.parseWhereSql(conditionVos, ServiceCol.class);
+		QueryWrapper<ServiceCol> queryWrapper = SearchUtils.parseWhereSql(conditionVos, ServiceCol.class);
 		List<ServiceCol> colList = serviceColService.queryServiceColByConditions(queryWrapper);
 		return HttpResult.ok(colList);
 	}

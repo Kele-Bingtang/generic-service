@@ -10,7 +10,10 @@ import java.util.List;
  * @date 2022/12/5 23:01
  * @note
  */
-public class SearchUtil {
+public class SearchUtils {
+    
+    private SearchUtils() {
+    }
 
     public static <T> QueryWrapper<T> parseWhereSql(List<ConditionVo> conditionList, Class<T> classObj) {
         if(null == conditionList) {

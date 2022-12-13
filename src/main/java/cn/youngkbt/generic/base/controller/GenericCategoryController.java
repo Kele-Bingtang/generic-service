@@ -4,7 +4,7 @@ import cn.youngkbt.generic.base.model.GenericCategory;
 import cn.youngkbt.generic.base.service.GenericCategoryService;
 import cn.youngkbt.generic.http.HttpResult;
 import cn.youngkbt.generic.http.Response;
-import cn.youngkbt.generic.utils.SearchUtil;
+import cn.youngkbt.generic.utils.SearchUtils;
 import cn.youngkbt.generic.valid.ValidList;
 import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -30,7 +30,7 @@ public class GenericCategoryController {
 
     @GetMapping("/queryGenericCategoryByConditions")
     public Response queryGenericCategoryByConditions(@RequestBody List<ConditionVo> conditionVos) {
-        QueryWrapper<GenericCategory> queryWrapper = SearchUtil.parseWhereSql(conditionVos, GenericCategory.class);
+        QueryWrapper<GenericCategory> queryWrapper = SearchUtils.parseWhereSql(conditionVos, GenericCategory.class);
         List<GenericCategory> category = genericCategoryService.queryGenericCategoryByCondition(queryWrapper);
         return HttpResult.ok(category);
     }
@@ -51,7 +51,7 @@ public class GenericCategoryController {
     @GetMapping("/queryGenericCategoryConditionsPages")
     public Response queryGenericCategoryConditionsPages(@Validated @RequestBody(required = false) ValidList<ConditionVo> conditionVos, @RequestParam(defaultValue = "1", required = false) Integer pageNo, @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
         IPage<GenericCategory> page = new Page<>(pageNo, pageSize);
-        QueryWrapper<GenericCategory> queryWrapper = SearchUtil.parseWhereSql(conditionVos, GenericCategory.class);
+        QueryWrapper<GenericCategory> queryWrapper = SearchUtils.parseWhereSql(conditionVos, GenericCategory.class);
         IPage<GenericCategory> categoryList = genericCategoryService.queryGenericCategoryConditionsPages(page, queryWrapper);
         return HttpResult.ok(categoryList);
     }

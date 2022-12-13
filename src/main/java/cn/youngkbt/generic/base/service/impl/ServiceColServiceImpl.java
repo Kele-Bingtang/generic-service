@@ -1,13 +1,15 @@
 package cn.youngkbt.generic.base.service.impl;
 
-import java.util.List;
-
-import cn.youngkbt.generic.base.service.ServiceColService;
-import cn.youngkbt.generic.base.model.ServiceCol;
 import cn.youngkbt.generic.base.mapper.ServiceColMapper;
+import cn.youngkbt.generic.base.model.ServiceCol;
+import cn.youngkbt.generic.base.service.ServiceColService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author Kele-Bingtang
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ServiceColServiceImpl implements ServiceColService {
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private ServiceColMapper serviceColMapper;

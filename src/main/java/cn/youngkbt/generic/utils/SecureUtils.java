@@ -7,7 +7,10 @@ import java.util.UUID;
  * @date 2022/12/4 16:46
  * @note
  */
-public class SecureUtil {
+public class SecureUtils {
+    
+    private SecureUtils() {
+    }
     
     public static String noBarUUID() {
         return UUID.randomUUID().toString().replace("-", "");
