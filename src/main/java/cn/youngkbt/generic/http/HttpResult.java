@@ -18,7 +18,7 @@ public class HttpResult {
         Response response = new Response();
         response.setData(data);
         response.setCode(status.getCode());
-        response.setCodeMessage(status.getStatus());
+        response.setStatus(status.getStatus());
         response.setMessage(status.getMessage());
         return response;
     }
@@ -29,7 +29,7 @@ public class HttpResult {
         map.put(key, data);
         response.setData(map);
         response.setCode(status.getCode());
-        response.setCodeMessage(status.getStatus());
+        response.setStatus(status.getStatus());
         response.setMessage(status.getMessage());
         return response;
     }
@@ -38,7 +38,7 @@ public class HttpResult {
         Response response = new Response();
         response.setData(data);
         response.setCode(code);
-        response.setCodeMessage(codeMessage);
+        response.setStatus(codeMessage);
         response.setMessage(message);
         return response;
     }
@@ -49,7 +49,7 @@ public class HttpResult {
         map.put(key, data);
         response.setData(map);
         response.setCode(code);
-        response.setCodeMessage(codeMessage);
+        response.setStatus(codeMessage);
         response.setMessage(message);
         return response;
     }
@@ -58,7 +58,7 @@ public class HttpResult {
         Response response = new Response();
         response.setData(data);
         response.setCode(ResponseStatusEnum.SUCCESS.getCode());
-        response.setCodeMessage(ResponseStatusEnum.SUCCESS.getStatus());
+        response.setStatus(ResponseStatusEnum.SUCCESS.getStatus());
         response.setMessage(ResponseStatusEnum.SUCCESS.getMessage());
         return response;
     }
@@ -69,7 +69,7 @@ public class HttpResult {
         map.put(key, data);
         response.setData(map);
         response.setCode(ResponseStatusEnum.SUCCESS.getCode());
-        response.setCodeMessage(ResponseStatusEnum.SUCCESS.getStatus());
+        response.setStatus(ResponseStatusEnum.SUCCESS.getStatus());
         response.setMessage(ResponseStatusEnum.SUCCESS.getMessage());
         return response;
     }
@@ -78,7 +78,7 @@ public class HttpResult {
         Response response = new Response();
         response.setData(data);
         response.setCode(ResponseStatusEnum.FAIL.getCode());
-        response.setCodeMessage(ResponseStatusEnum.FAIL.getStatus());
+        response.setStatus(ResponseStatusEnum.FAIL.getStatus());
         response.setMessage(ResponseStatusEnum.FAIL.getMessage());
         return response;
     }
@@ -89,7 +89,7 @@ public class HttpResult {
         map.put(key, data);
         response.setData(map);
         response.setCode(ResponseStatusEnum.FAIL.getCode());
-        response.setCodeMessage(ResponseStatusEnum.FAIL.getStatus());
+        response.setStatus(ResponseStatusEnum.FAIL.getStatus());
         response.setMessage(ResponseStatusEnum.FAIL.getMessage());
         return response;
     }
@@ -98,7 +98,7 @@ public class HttpResult {
         Response response = new Response();
         response.setData(data);
         response.setCode(ResponseStatusEnum.ERROR.getCode());
-        response.setCodeMessage(ResponseStatusEnum.ERROR.getStatus());
+        response.setStatus(ResponseStatusEnum.ERROR.getStatus());
         response.setMessage(ResponseStatusEnum.ERROR.getMessage());
         return response;
     }
@@ -109,7 +109,7 @@ public class HttpResult {
         map.put(key, data);
         response.setData(map);
         response.setCode(ResponseStatusEnum.ERROR.getCode());
-        response.setCodeMessage(ResponseStatusEnum.ERROR.getStatus());
+        response.setStatus(ResponseStatusEnum.ERROR.getStatus());
         response.setMessage(ResponseStatusEnum.ERROR.getMessage());
         return response;
     }

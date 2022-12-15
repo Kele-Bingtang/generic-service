@@ -1,8 +1,6 @@
 package cn.youngkbt.generic.http;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author kele-Bingtang
@@ -14,7 +12,7 @@ public class Response implements Serializable {
     /** 自定义状态码 **/
     private Integer code;
     /** 状态码信息 **/
-    protected String codeMessage;
+    protected String status;
     /** 消息 **/
     private String message;
     /** 数据 **/
@@ -28,12 +26,12 @@ public class Response implements Serializable {
         this.code = code;
     }
 
-    public String getCodeMessage() {
-        return codeMessage;
+    public String getStatus() {
+        return status;
     }
 
-    public void setCodeMessage(String codeMessage) {
-        this.codeMessage = codeMessage;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getMessage() {
