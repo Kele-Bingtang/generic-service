@@ -8,7 +8,9 @@ import cn.youngkbt.generic.base.service.GenericReportService;
 import cn.youngkbt.generic.base.service.GenericServiceService;
 import cn.youngkbt.generic.base.service.ServiceColService;
 import cn.youngkbt.generic.exception.ConditionSqlException;
+import cn.youngkbt.generic.utils.SearchUtils;
 import cn.youngkbt.generic.utils.SecurityUtils;
+import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.slf4j.Logger;
@@ -26,8 +28,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author Kele-Bingtang
- * @version 1.0
- * @since 2022-12-03 22:45:22
+ * @note 1.0
+ * @date 2022-12-03 22:45:22
  */
 @Service
 public class GenericServiceServiceImpl implements GenericServiceService {
@@ -43,7 +45,8 @@ public class GenericServiceServiceImpl implements GenericServiceService {
     private RedisTemplate<String, Object> redisTemplate;
 
     @Override
-    public List<GenericService> queryGenericServiceByConditions(QueryWrapper<GenericService> queryWrapper) {
+    public List<GenericService> queryGenericServiceByConditions(List<ConditionVo> conditionVos) {
+        QueryWrapper<GenericService> queryWrapper = SearchUtils.parseWhereSql(conditionVos, GenericService.class);
         try {
             return genericServiceMapper.selectList(queryWrapper);
         } catch (Exception e) {
@@ -94,7 +97,8 @@ public class GenericServiceServiceImpl implements GenericServiceService {
     }
 
     @Override
-    public IPage<GenericService> queryGenericServiceConditionsPages(IPage<GenericService> page, QueryWrapper<GenericService> queryWrapper) {
+    public IPage<GenericService> queryGenericServiceConditionsPages(IPage<GenericService> page, List<ConditionVo> conditionVos) {
+        QueryWrapper<GenericService> queryWrapper = SearchUtils.parseWhereSql(conditionVos, GenericService.class);
         try {
             return genericServiceMapper.selectPage(page, queryWrapper);
         } catch (Exception e) {

@@ -6,6 +6,8 @@ import cn.youngkbt.generic.base.model.GenericUser;
 import cn.youngkbt.generic.base.service.GenericProjectService;
 import cn.youngkbt.generic.base.service.GenericUserService;
 import cn.youngkbt.generic.exception.ConditionSqlException;
+import cn.youngkbt.generic.utils.SearchUtils;
+import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.slf4j.Logger;
@@ -18,8 +20,8 @@ import java.util.List;
 
 /**
  * @author Kele-Bingtang
- * @since 2022-12-03 22:45:22
- * @version 1.0
+ * @date 2022-12-03 22:45:22
+ * @note 1.0
  */
 @Service
 public class GenericUserServiceImpl implements GenericUserService {
@@ -31,7 +33,8 @@ public class GenericUserServiceImpl implements GenericUserService {
 	private GenericProjectService genericProjectService;
 
 	@Override
-	public List<GenericUser> queryGenericUserByConditions(QueryWrapper<GenericUser> queryWrapper) {
+	public List<GenericUser> queryGenericUserByConditions(List<ConditionVo> conditionVos) {
+		QueryWrapper<GenericUser> queryWrapper = SearchUtils.parseWhereSql(conditionVos, GenericUser.class);
 		try {
 			return genericUserMapper.selectList(queryWrapper);
 		} catch (Exception e) {
@@ -67,7 +70,8 @@ public class GenericUserServiceImpl implements GenericUserService {
 	}
 
 	@Override
-	public IPage<GenericUser> queryGenericUserConditionsPages(IPage<GenericUser> page, QueryWrapper<GenericUser> queryWrapper) {
+	public IPage<GenericUser> queryGenericUserConditionsPages(IPage<GenericUser> page, List<ConditionVo> conditionVos) {
+		QueryWrapper<GenericUser> queryWrapper = SearchUtils.parseWhereSql(conditionVos, GenericUser.class);
 		try {
 			return genericUserMapper.selectPage(page, queryWrapper);
 		} catch (Exception e) {

@@ -4,10 +4,8 @@ import cn.youngkbt.generic.base.model.GenericCategory;
 import cn.youngkbt.generic.base.service.GenericCategoryService;
 import cn.youngkbt.generic.http.HttpResult;
 import cn.youngkbt.generic.http.Response;
-import cn.youngkbt.generic.utils.SearchUtils;
 import cn.youngkbt.generic.valid.ValidList;
 import cn.youngkbt.generic.vo.ConditionVo;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +16,8 @@ import java.util.List;
 
 /**
  * @author Kele-Bingtang
- * @version 1.0
- * @since 2022-12-03 22:45:22
+ * @note 1.0
+ * @date 2022-12-03 22:45:22
  */
 @RestController
 @RequestMapping("/genericCategory")
@@ -30,8 +28,7 @@ public class GenericCategoryController {
 
     @GetMapping("/queryGenericCategoryByConditions")
     public Response queryGenericCategoryByConditions(@RequestBody List<ConditionVo> conditionVos) {
-        QueryWrapper<GenericCategory> queryWrapper = SearchUtils.parseWhereSql(conditionVos, GenericCategory.class);
-        List<GenericCategory> category = genericCategoryService.queryGenericCategoryByCondition(queryWrapper);
+        List<GenericCategory> category = genericCategoryService.queryGenericCategoryByCondition(conditionVos);
         return HttpResult.ok(category);
     }
 
@@ -45,15 +42,14 @@ public class GenericCategoryController {
     public Response queryGenericCategoryListPages(GenericCategory genericCategory, @RequestParam(defaultValue = "1", required = false) Integer pageNo, @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
         IPage<GenericCategory> page = new Page<>(pageNo, pageSize);
         IPage<GenericCategory> categoryList = genericCategoryService.queryGenericCategoryListPages(page, genericCategory);
-        return HttpResult.ok(categoryList);
+        return HttpResult.ok(categoryList.getRecords());
     }
 
     @GetMapping("/queryGenericCategoryConditionsPages")
     public Response queryGenericCategoryConditionsPages(@Validated @RequestBody(required = false) ValidList<ConditionVo> conditionVos, @RequestParam(defaultValue = "1", required = false) Integer pageNo, @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
         IPage<GenericCategory> page = new Page<>(pageNo, pageSize);
-        QueryWrapper<GenericCategory> queryWrapper = SearchUtils.parseWhereSql(conditionVos, GenericCategory.class);
-        IPage<GenericCategory> categoryList = genericCategoryService.queryGenericCategoryConditionsPages(page, queryWrapper);
-        return HttpResult.ok(categoryList);
+        IPage<GenericCategory> categoryList = genericCategoryService.queryGenericCategoryConditionsPages(page, conditionVos);
+        return HttpResult.ok(categoryList.getRecords());
     }
 
     @PostMapping("/insertGenericCategory")

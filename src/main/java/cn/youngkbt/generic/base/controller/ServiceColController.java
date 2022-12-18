@@ -4,9 +4,7 @@ import cn.youngkbt.generic.base.model.ServiceCol;
 import cn.youngkbt.generic.base.service.ServiceColService;
 import cn.youngkbt.generic.http.HttpResult;
 import cn.youngkbt.generic.http.Response;
-import cn.youngkbt.generic.utils.SearchUtils;
 import cn.youngkbt.generic.vo.ConditionVo;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,8 +12,8 @@ import java.util.List;
 
 /**
  * @author Kele-Bingtang
- * @since 2022-12-03 22:45:22
- * @version 1.0
+ * @date 2022-12-03 22:45:22
+ * @note 1.0
  */
 @RestController
 @RequestMapping("/serviceCol")
@@ -26,8 +24,7 @@ public class ServiceColController {
 
 	@GetMapping("/queryServiceColByConditions")
 	public Response queryServiceColByConditions(@RequestBody List<ConditionVo> conditionVos) {
-		QueryWrapper<ServiceCol> queryWrapper = SearchUtils.parseWhereSql(conditionVos, ServiceCol.class);
-		List<ServiceCol> colList = serviceColService.queryServiceColByConditions(queryWrapper);
+		List<ServiceCol> colList = serviceColService.queryServiceColByConditions(conditionVos);
 		return HttpResult.ok(colList);
 	}
 

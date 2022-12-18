@@ -4,9 +4,7 @@ import cn.youngkbt.generic.base.model.GenericReport;
 import cn.youngkbt.generic.base.service.GenericReportService;
 import cn.youngkbt.generic.http.HttpResult;
 import cn.youngkbt.generic.http.Response;
-import cn.youngkbt.generic.utils.SearchUtils;
 import cn.youngkbt.generic.vo.ConditionVo;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +13,8 @@ import java.util.List;
 
 /**
  * @author Kele-Bingtang
- * @since 2022-12-03 22:45:22
- * @version 1.0
+ * @date 2022-12-03 22:45:22
+ * @note 1.0
  */
 @RestController
 @RequestMapping("/genericReport")
@@ -27,8 +25,7 @@ public class GenericReportController {
 
 	@GetMapping("/queryGenericReportByConditions")
 	public Response queryGenericReportByConditions(@RequestBody List<ConditionVo> conditionVos) {
-		QueryWrapper<GenericReport> queryWrapper = SearchUtils.parseWhereSql(conditionVos, GenericReport.class);
-		List<GenericReport>  report = genericReportService.queryGenericReportByCondition(queryWrapper);
+		List<GenericReport>  report = genericReportService.queryGenericReportByCondition(conditionVos);
 		return HttpResult.ok(report);
 	}
 

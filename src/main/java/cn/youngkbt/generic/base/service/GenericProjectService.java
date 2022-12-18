@@ -1,30 +1,31 @@
 package cn.youngkbt.generic.base.service;
 
-import java.util.List;
-
 import cn.youngkbt.generic.base.model.GenericProject;
+import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import java.util.List;
+
 /**
  * @author Kele-Bingtang
- * @since 2022-12-03 22:45:22
- * @version 1.0
+ * @date 2022-12-03 22:45:22
+ * @note 1.0
  */
 public interface GenericProjectService {
 
 	/**
 	 * 根据 ID 查询一条数据
-	 * @param queryWrapper 查询条件
+	 * @param conditionVos 查询条件
 	 * @return 根据 ID 查询出的实体对象
 	 */
-	public List<GenericProject> queryGenericProjectByConditions(QueryWrapper<GenericProject> queryWrapper);
+	public List<GenericProject> queryGenericProjectByConditions(List<ConditionVo> conditionVos);
 	
 	/**
-	 * 查询所有数据
+	 * 查询个人的所有数据
 	 * @return 所有数据的实体对象集合
 	 */
-	public List<GenericProject> queryGenericProjectList(GenericProject genericProject);
+	public List<GenericProject> queryGenericProjectListOwner();
 	
 	/**
 	 * 查询分页数据
@@ -35,9 +36,10 @@ public interface GenericProjectService {
 	/**
 	 * 查询分页数据
 	 * @param page 分页信息
+	 * @param conditionVos 查询条件
 	 * @return 所有数据的实体对象集合
 	 */
-	public IPage<GenericProject> queryGenericProjectConditionsPages(IPage<GenericProject> page, QueryWrapper<GenericProject> queryWrapper);
+	public IPage<GenericProject> queryGenericProjectConditionsPages(IPage<GenericProject> page, List<ConditionVo> conditionVos);
 
 	/**
 	 * 插入一条数据

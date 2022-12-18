@@ -3,11 +3,12 @@ package cn.youngkbt.generic.base.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * @author Kele-Bingtang
@@ -29,18 +30,20 @@ public class GenericRole {
     @NotBlank(message = "角色名称不能为空", groups = {RoleInsert.class, RoleUpdate.class})
     private String name;
 
-    @NotNull(message = "用户 id 不能为空", groups = RoleInsert.class)
-    @Null(message = "用户 id 不能修改", groups = RoleUpdate.class)
-    private Integer createUser;
+    @NotNull(message = "用户名不能为空", groups = RoleInsert.class)
+    @Null(message = "用户名不能修改", groups = RoleUpdate.class)
+    private String createUser;
   
     @Null(message = "不允许传入创建时间，系统自动创建", groups = {RoleInsert.class, RoleUpdate.class})
-    private Timestamp createTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date createTime;
   
-    @NotNull(message = "修改的用户 id 不能为空", groups = {RoleInsert.class, RoleUpdate.class})
-    private Integer modifyUser;
+    @NotNull(message = "修改的用户名不能为空", groups = {RoleInsert.class, RoleUpdate.class})
+    private String modifyUser;
   
     @Null(message = "不允许传入修改时间，系统自动创建", groups = {RoleInsert.class, RoleUpdate.class})
-    private Timestamp modifyTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date modifyTime;
   
     @NotNull(message = "项目 id 不能为空", groups = RoleInsert.class)
     private Integer projectId;

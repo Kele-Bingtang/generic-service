@@ -1,24 +1,25 @@
 package cn.youngkbt.generic.base.service;
 
-import java.util.List;
-
 import cn.youngkbt.generic.base.model.GenericReport;
+import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import java.util.List;
+
 /**
  * @author Kele-Bingtang
- * @since 2022-12-03 22:45:22
- * @version 1.0
+ * @date 2022-12-03 22:45:22
+ * @note 1.0
  */
 public interface GenericReportService {
 
 	/**
 	 * 根据 ID 查询一条数据
-	 * @param queryWrapper 查询条件
+	 * @param conditionVos 查询条件
 	 * @return 根据 ID 查询出的实体对象
 	 */
-	public List<GenericReport>  queryGenericReportByCondition(QueryWrapper<GenericReport> queryWrapper);
+	public List<GenericReport>  queryGenericReportByCondition(List<ConditionVo> conditionVos);
 	
 	/**
 	 * 查询所有数据

@@ -1,24 +1,24 @@
 package cn.youngkbt.generic.base.service;
 
 import cn.youngkbt.generic.base.model.GenericUser;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import java.util.List;
 
 /**
  * @author Kele-Bingtang
- * @since 2022-12-03 22:45:22
- * @version 1.0
+ * @date 2022-12-03 22:45:22
+ * @note 1.0
  */
 public interface GenericUserService {
-
+	
 	/**
 	 * 根据 ID 查询一条数据
-	 * @param queryWrapper 查询条件
+	 * @param conditionVos 查询条件
 	 * @return 根据 ID 查询出的实体对象
 	 */
-	public List<GenericUser> queryGenericUserByConditions(QueryWrapper<GenericUser> queryWrapper);
+	public List<GenericUser> queryGenericUserByConditions(List<ConditionVo> conditionVos);
 	
 	/**
 	 * 查询所有数据
@@ -42,7 +42,7 @@ public interface GenericUserService {
 	 * @param page 分页信息
 	 * @return 所有数据的实体对象集合
 	 */
-	public IPage<GenericUser> queryGenericUserConditionsPages(IPage<GenericUser> page, QueryWrapper<GenericUser> queryWrapper);
+	public IPage<GenericUser> queryGenericUserConditionsPages(IPage<GenericUser> page, List<ConditionVo> conditionVos);
 
 	/**
 	 * 插入一条数据

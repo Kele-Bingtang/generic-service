@@ -1,19 +1,18 @@
 package cn.youngkbt.generic.base.model;
 
 import cn.youngkbt.generic.valid.annotation.IncludeValid;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * @author Kele-Bingtang
- * @since 2022-12-03 22:45:22
- * @version 1.0
+ * @date 2022-12-03 22:45:22
+ * @note 1.0
  */
 @TableName("generic_service")
 @Data
@@ -29,17 +28,19 @@ public class GenericService {
 	/**
 	 * 接口名
 	 */
+	@TableField(condition = SqlCondition.LIKE)
 	@NotNull(message = "接口名不能为空", groups = ServiceInsert.class)
 	private String serviceName;
 	/**
 	 * 接口地址
 	 */
+	@TableField(condition = SqlCondition.LIKE)
 	@NotNull(message = "接口地址不能为空", groups = ServiceInsert.class)
 	private String serviceUrl;
 	/**
 	 * 接口完整地址
 	 */
-	@Null(message = "接口完整地址不允许传入", groups = {ServiceInsert.class, ServiceUpdate.class})
+	@NotNull(message = "接口完整地址不能为空", groups = {ServiceInsert.class, ServiceUpdate.class})
 	private String fullUrl;
 	/**
 	 * 接口状态，0 启用，1 禁用
@@ -69,24 +70,26 @@ public class GenericService {
 	/**
 	 * 创建接口的用户 id
 	 */
-	@NotNull(message = "用户 id 不能为空", groups = ServiceInsert.class)
-	@Null(message = "用户 id 不能修改", groups = ServiceUpdate.class)
-	private Integer createUser;
+	@NotNull(message = "用户名不能为空", groups = ServiceInsert.class)
+	@Null(message = "用户名不能修改", groups = ServiceUpdate.class)
+	private String createUser;
 	/**
 	 * 创建时间
 	 */
 	@Null(message = "不允许传入创建时间，系统自动创建", groups = {ServiceInsert.class, ServiceUpdate.class})
-	private Timestamp createTime;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	private Date createTime;
 	/**
 	 * 修改接口的用户 id
 	 */
-	@NotNull(message = "修改的用户 id 不能为空", groups = {ServiceInsert.class, ServiceUpdate.class})
-	private Integer modifyUser;
+	@NotNull(message = "修改的用户名不能为空", groups = {ServiceInsert.class, ServiceUpdate.class})
+	private String modifyUser;
 	/**
 	 * 最后修改时间
 	 */
 	@Null(message = "不允许传入修改时间，系统自动创建", groups = {ServiceInsert.class, ServiceUpdate.class})
-	private Timestamp modifyTime;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	private Date modifyTime;
 	/**
 	 * 项目的 id
 	 */
@@ -96,7 +99,7 @@ public class GenericService {
 	 * 目录的 id
 	 */
 	@NotNull(message = "目录 id 不能为空", groups = ServiceInsert.class)
-	private Integer serviceId;
+	private Integer categoryId;
 
 	public interface ServiceInsert {
 	}

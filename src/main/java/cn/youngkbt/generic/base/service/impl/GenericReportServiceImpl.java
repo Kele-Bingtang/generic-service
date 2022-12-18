@@ -1,10 +1,10 @@
 package cn.youngkbt.generic.base.service.impl;
 
-import java.util.List;
-
-import cn.youngkbt.generic.base.service.GenericReportService;
-import cn.youngkbt.generic.base.model.GenericReport;
 import cn.youngkbt.generic.base.mapper.GenericReportMapper;
+import cn.youngkbt.generic.base.model.GenericReport;
+import cn.youngkbt.generic.base.service.GenericReportService;
+import cn.youngkbt.generic.utils.SearchUtils;
+import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.slf4j.Logger;
@@ -12,10 +12,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author Kele-Bingtang
- * @since 2022-12-03 22:45:22
- * @version 1.0
+ * @date 2022-12-03 22:45:22
+ * @note 1.0
  */
 @Service
 public class GenericReportServiceImpl implements GenericReportService {
@@ -25,7 +27,9 @@ public class GenericReportServiceImpl implements GenericReportService {
 	private GenericReportMapper genericReportMapper;
 
 	@Override
-	public List<GenericReport> queryGenericReportByCondition(QueryWrapper<GenericReport> queryWrapper) {
+	public List<GenericReport> queryGenericReportByCondition(List<ConditionVo> conditionVos) {
+		QueryWrapper<GenericReport> queryWrapper = SearchUtils.parseWhereSql(conditionVos, GenericReport.class);
+		
 		return genericReportMapper.selectList(queryWrapper);
 	}
 

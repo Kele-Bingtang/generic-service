@@ -4,17 +4,18 @@ import cn.youngkbt.generic.valid.annotation.IncludeValid;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * @author Kele-Bingtang
- * @since 2022-12-03 22:45:22
- * @version 1.0
+ * @date 2022-12-03 22:45:22
+ * @note 1.0
  */
 @TableName("generic_user")
 @Data
@@ -69,12 +70,14 @@ public class GenericUser {
 	 */
 	@NotNull(message = "用户 id 不能为空", groups = UserInsert.class)
 	@Null(message = "用户 id 不能修改", groups = UserUpdate.class)
-	private Timestamp registerTime;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	private Date registerTime;
 	/**
 	 * 最后修改时间
 	 */
 	@Null(message = "不允许传入修改时间，系统自动创建", groups = {GenericService.ServiceInsert.class, GenericService.ServiceUpdate.class})
-	private Timestamp modifyTime;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	private Date modifyTime;
 
 	public interface UserInsert {
 	}

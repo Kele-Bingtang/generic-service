@@ -6,7 +6,9 @@ import cn.youngkbt.generic.base.model.GenericService;
 import cn.youngkbt.generic.base.service.GenericCategoryService;
 import cn.youngkbt.generic.base.service.GenericServiceService;
 import cn.youngkbt.generic.exception.ConditionSqlException;
+import cn.youngkbt.generic.utils.SearchUtils;
 import cn.youngkbt.generic.utils.SecurityUtils;
+import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.slf4j.Logger;
@@ -24,8 +26,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author Kele-Bingtang
- * @version 1.0
- * @since 2022-12-03 22:45:22
+ * @note 1.0
+ * @date 2022-12-03 22:45:22
  */
 @Service
 public class GenericCategoryServiceImpl implements GenericCategoryService {
@@ -41,7 +43,8 @@ public class GenericCategoryServiceImpl implements GenericCategoryService {
     private RedisTemplate<String, Object> redisTemplate;
 
     @Override
-    public List<GenericCategory> queryGenericCategoryByCondition(QueryWrapper<GenericCategory> queryWrapper) {
+    public List<GenericCategory> queryGenericCategoryByCondition(List<ConditionVo> conditionVos) {
+        QueryWrapper<GenericCategory> queryWrapper = SearchUtils.parseWhereSql(conditionVos, GenericCategory.class);
         try {
             return genericCategoryMapper.selectList(queryWrapper);
         } catch (Exception e) {
@@ -92,7 +95,8 @@ public class GenericCategoryServiceImpl implements GenericCategoryService {
     }
 
     @Override
-    public IPage<GenericCategory> queryGenericCategoryConditionsPages(IPage<GenericCategory> page, QueryWrapper<GenericCategory> queryWrapper) {
+    public IPage<GenericCategory> queryGenericCategoryConditionsPages(IPage<GenericCategory> page, List<ConditionVo> conditionVos) {
+        QueryWrapper<GenericCategory> queryWrapper = SearchUtils.parseWhereSql(conditionVos, GenericCategory.class);
         try {
             return genericCategoryMapper.selectPage(page, queryWrapper);
         } catch (Exception e) {

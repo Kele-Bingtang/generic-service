@@ -1,19 +1,21 @@
 package cn.youngkbt.generic.base.service.impl;
 
 import cn.youngkbt.generic.base.mapper.GenericProjectMapper;
+import cn.youngkbt.generic.base.mapper.UserProjectMapper;
 import cn.youngkbt.generic.base.model.GenericCategory;
 import cn.youngkbt.generic.base.model.GenericProject;
+import cn.youngkbt.generic.base.model.UserProject;
 import cn.youngkbt.generic.base.service.GenericCategoryService;
 import cn.youngkbt.generic.base.service.GenericProjectService;
-import cn.youngkbt.generic.base.service.GenericServiceService;
 import cn.youngkbt.generic.exception.ConditionSqlException;
+import cn.youngkbt.generic.utils.SearchUtils;
 import cn.youngkbt.generic.utils.SecureUtils;
 import cn.youngkbt.generic.utils.SecurityUtils;
+import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,24 +28,25 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author Kele-Bingtang
- * @version 1.0
- * @since 2022-12-03 22:45:22
+ * @note 1.0
+ * @date 2022-12-03 22:45:22
  */
 @Service
 public class GenericProjectServiceImpl implements GenericProjectService {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
+    @Resource
     private GenericProjectMapper genericProjectMapper;
-    @Autowired
+    @Resource
     private GenericCategoryService genericCategoryService;
-    @Autowired
-    private GenericServiceService genericServiceService;
+    @Resource
+    private UserProjectMapper userProjectMapper;
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
     @Override
-    public List<GenericProject> queryGenericProjectByConditions(QueryWrapper<GenericProject> queryWrapper) {
+    public List<GenericProject> queryGenericProjectByConditions(List<ConditionVo> conditionVos) {
+        QueryWrapper<GenericProject> queryWrapper = SearchUtils.parseWhereSql(conditionVos, GenericProject.class);
         try {
             return genericProjectMapper.selectList(queryWrapper);
         } catch (Exception e) {
@@ -52,8 +55,9 @@ public class GenericProjectServiceImpl implements GenericProjectService {
     }
 
     @Override
-    public List<GenericProject> queryGenericProjectList(GenericProject genericProject) {
-        String key = SecurityUtils.getUsername() + "_project_" + genericProject.toString();
+    public List<GenericProject> queryGenericProjectListOwner() {
+        String username = SecurityUtils.getUsername();
+        String key = username + "_project_";
         // 从 Redis 拿缓存
         Object o = redisTemplate.opsForValue().get(key);
         if (o instanceof List) {
@@ -61,11 +65,7 @@ public class GenericProjectServiceImpl implements GenericProjectService {
             LOGGER.info("从 Redis 拿到数据：{}", projectList);
             return projectList;
         }
-        QueryWrapper<GenericProject> queryWrapper = new QueryWrapper<>();
-        // 如果 genericCategory 没有数据，则返回全部数据
-        queryWrapper.setEntity(genericProject);
-        List<GenericProject> projectList = genericProjectMapper.selectList(queryWrapper);
-        // 存入 Redis
+        List<GenericProject> projectList = userProjectMapper.queryGenericProjectListOwner(username);
         redisTemplate.opsForValue().set(key, projectList, 24, TimeUnit.HOURS);
         return projectList;
     }
@@ -94,7 +94,8 @@ public class GenericProjectServiceImpl implements GenericProjectService {
     }
 
     @Override
-    public IPage<GenericProject> queryGenericProjectConditionsPages(IPage<GenericProject> page, QueryWrapper<GenericProject> queryWrapper) {
+    public IPage<GenericProject> queryGenericProjectConditionsPages(IPage<GenericProject> page, List<ConditionVo> conditionVos) {
+        QueryWrapper<GenericProject> queryWrapper = SearchUtils.parseWhereSql(conditionVos, GenericProject.class);
         try {
             return genericProjectMapper.selectPage(page, queryWrapper);
         } catch (Exception e) {
@@ -116,6 +117,14 @@ public class GenericProjectServiceImpl implements GenericProjectService {
         category.setCreateUser(genericProject.getCreateUser());
         category.setModifyUser(genericProject.getModifyUser());
         genericCategoryService.insertGenericCategory(category);
+        // 添加到 user_project 表
+        UserProject userProject = new UserProject();
+        userProject.setUsername(SecurityUtils.getUsername());
+        userProject.setProjectId(genericProject.getId());
+        // 默认都是开发者
+        userProject.setRoleId(2);
+        userProject.setType(0);
+        userProjectMapper.insert(userProject);
         if (i == 0) {
             return null;
         } else {
@@ -173,7 +182,7 @@ public class GenericProjectServiceImpl implements GenericProjectService {
     }
 
     public void deleteCachedKeys() {
-        Set<String> keys = redisTemplate.keys(SecurityUtils.getUsername() + "_project_*");
+        Set<String> keys = redisTemplate.keys(SecurityUtils.getUsername() + "_project*");
         if (null != keys) {
             Long delete = redisTemplate.delete(keys);
             if (null != delete) {

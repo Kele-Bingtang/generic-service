@@ -3,6 +3,8 @@ package cn.youngkbt.generic.base.service.impl;
 import cn.youngkbt.generic.base.mapper.ServiceColMapper;
 import cn.youngkbt.generic.base.model.ServiceCol;
 import cn.youngkbt.generic.base.service.ServiceColService;
+import cn.youngkbt.generic.utils.SearchUtils;
+import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +15,8 @@ import java.util.List;
 
 /**
  * @author Kele-Bingtang
- * @since 2022-12-03 22:45:22
- * @version 1.0
+ * @date 2022-12-03 22:45:22
+ * @note 1.0
  */
 @Service
 public class ServiceColServiceImpl implements ServiceColService {
@@ -24,7 +26,8 @@ public class ServiceColServiceImpl implements ServiceColService {
 	private ServiceColMapper serviceColMapper;
 
 	@Override
-	public List<ServiceCol> queryServiceColByConditions(QueryWrapper<ServiceCol> queryWrapper) {
+	public List<ServiceCol> queryServiceColByConditions(List<ConditionVo> conditionVos) {
+		QueryWrapper<ServiceCol> queryWrapper = SearchUtils.parseWhereSql(conditionVos, ServiceCol.class);
 		return serviceColMapper.selectList(queryWrapper);
 	}
 

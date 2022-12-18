@@ -6,8 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 
 /**
  * @author Kele-Bingtang
- * @since 2022-12-03 22:45:23
- * @version 1.0
+ * @date 2022-12-03 22:45:23
+ * @note 1.0
  */
 @Mapper
 public interface GenericUserMapper extends BaseMapper<GenericUser> {

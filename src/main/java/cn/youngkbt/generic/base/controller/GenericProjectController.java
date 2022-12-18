@@ -4,10 +4,8 @@ import cn.youngkbt.generic.base.model.GenericProject;
 import cn.youngkbt.generic.base.service.GenericProjectService;
 import cn.youngkbt.generic.http.HttpResult;
 import cn.youngkbt.generic.http.Response;
-import cn.youngkbt.generic.utils.SearchUtils;
 import cn.youngkbt.generic.valid.ValidList;
 import cn.youngkbt.generic.vo.ConditionVo;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +16,8 @@ import java.util.List;
 
 /**
  * @author Kele-Bingtang
- * @since 2022-12-03 22:45:22
- * @version 1.0
+ * @date 2022-12-03 22:45:22
+ * @note 1.0
  */
 @RestController
 @RequestMapping("/genericProject")
@@ -30,14 +28,13 @@ public class GenericProjectController {
 
 	@GetMapping("/queryGenericProjectByConditions")
 	public Response queryGenericProjectByConditions(@RequestBody List<ConditionVo> conditionVos) {
-		QueryWrapper<GenericProject> queryWrapper = SearchUtils.parseWhereSql(conditionVos, GenericProject.class);
-		List<GenericProject> project = genericProjectService.queryGenericProjectByConditions(queryWrapper);
+		List<GenericProject> project = genericProjectService.queryGenericProjectByConditions(conditionVos);
 		return HttpResult.ok(project);
 	}
 
-	@GetMapping("/queryGenericProjectList")
-	public Response queryGenericProjectList(GenericProject genericProject) {
-		List<GenericProject> projectList = genericProjectService.queryGenericProjectList(genericProject);
+	@GetMapping("/queryGenericProjectListOwner")
+	public Response queryGenericProjectListOwner() {
+		List<GenericProject> projectList = genericProjectService.queryGenericProjectListOwner();
 		return HttpResult.ok(projectList);
 	}
 
@@ -45,15 +42,14 @@ public class GenericProjectController {
 	public Response queryGenericProjectListPages(GenericProject genericProject, @RequestParam(defaultValue = "1", required = false) Integer pageNo, @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
 		IPage<GenericProject> page = new Page<>(pageNo, pageSize);
 		IPage<GenericProject> projectListPages = genericProjectService.queryGenericProjectListPages(page, genericProject);
-		return HttpResult.ok(projectListPages);
+		return HttpResult.ok(projectListPages.getRecords());
 	}
 
 	@GetMapping("/queryGenericProjectConditionsPages")
 	public Response queryGenericProjectConditionsPages(@Validated @RequestBody(required = false) ValidList<ConditionVo> conditionVos, @RequestParam(defaultValue = "1", required = false) Integer pageNo, @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
 		IPage<GenericProject> page = new Page<>(pageNo, pageSize);
-		QueryWrapper<GenericProject> queryWrapper = SearchUtils.parseWhereSql(conditionVos, GenericProject.class);
-		IPage<GenericProject> categoryList = genericProjectService.queryGenericProjectConditionsPages(page, queryWrapper);
-		return HttpResult.ok(categoryList);
+		IPage<GenericProject> categoryList = genericProjectService.queryGenericProjectConditionsPages(page, conditionVos);
+		return HttpResult.ok(categoryList.getRecords());
 	}
 
 	@PostMapping("/insertGenericProject")

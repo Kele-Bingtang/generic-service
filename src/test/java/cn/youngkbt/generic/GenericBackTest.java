@@ -1,13 +1,6 @@
 package cn.youngkbt.generic;
 
-import cn.kbt.dbdtobean.core.DbdToBean;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Map;
 
 /**
  * @author Kele-Bingtang
@@ -27,4 +20,5 @@ public class GenericBackTest {
     //     dbdToBean.exportToFiles(generic);
     //     dbdToBean.closeConnection();
     // }
+    
 }
