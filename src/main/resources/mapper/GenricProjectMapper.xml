@@ -23,41 +23,25 @@
     </sql>
 
 
-    <select id="queryGenericProjectListOwner" parameterType = "string" resultMap = "baseResultMap">
+    <select id="queryGenericProjectListOwner" parameterType = "cn.youngkbt.generic.base.model.UserProject" resultMap = "baseResultMap">
         select
             <include refid = "baseColumnList" />
-            from generic_project gp where gp.id in (select project_id from user_project up where username = #{username})
+            from generic_project gp, user_project up
+            <where>
+                gp.id = up.project_id
+                <if test = "username != null">
+                    and username = #{username}
+                </if>
+                <if test = "enterType != null">
+                    and enter_type = #{enterType}
+                </if>
+            </where>
+    </select>
+    
+    <select id="queryGenericMemberInProject" resultType="cn.youngkbt.generic.base.model.GenericUser">
+        select gu.username, gu.nickname, gu.email, gu.gender, gu.birthday, gu.phone, gu.status
+        from generic_project gp, user_project up, generic_user gu where gp.secret_key = #{secretKey} and gp.id = up.id and up.id = gu.id
+        limit #{currentPage}, #{pageSize}
     </select>
 
-    <insert id = "insertUserProject" parameterType = "cn.youngkbt.generic.base.model.UserProject">
-        insert into user_project
-        <trim prefix = "(" suffix = ")" suffixOverrides = ",">
-            <if test = "username!= null">
-                username,
-            </if>
-            <if test = "projectId!= null">
-                project_id,
-            </if>
-            <if test = "roleId!= null">
-                role_id,
-            </if>
-            <if test = "type!= null">
-                type,
-            </if>
-        </trim>
-        <trim prefix = "values (" suffix = ")" suffixOverrides = ",">
-            <if test = "username != null">
-                #{username},
-            </if>
-            <if test = "projectId != null">
-                #{projectId},
-            </if>
-            <if test = "roleId != null">
-                #{roleId},
-            </if>
-            <if test = "type != null">
-                #{type},
-            </if>
-        </trim>
-    </insert>
 </mapper>

@@ -1,9 +1,11 @@
 package cn.youngkbt.generic.base.controller;
 
 import cn.youngkbt.generic.base.model.GenericProject;
+import cn.youngkbt.generic.base.model.UserProject;
 import cn.youngkbt.generic.base.service.GenericProjectService;
 import cn.youngkbt.generic.http.HttpResult;
 import cn.youngkbt.generic.http.Response;
+import cn.youngkbt.generic.utils.StringUtils;
 import cn.youngkbt.generic.valid.ValidList;
 import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -32,9 +34,18 @@ public class GenericProjectController {
 		return HttpResult.ok(project);
 	}
 
+	@GetMapping("/queryGenericProjectList")
+	public Response queryGenericProjectList(GenericProject genericProject) {
+		if(StringUtils.isBlank(genericProject.getSecretKey())) {
+			return HttpResult.fail("请携带有效的参数！");
+		}
+		List<GenericProject> projectList = genericProjectService.queryGenericProjectList(genericProject);
+		return HttpResult.ok(projectList);
+	}
+
 	@GetMapping("/queryGenericProjectListOwner")
-	public Response queryGenericProjectListOwner() {
-		List<GenericProject> projectList = genericProjectService.queryGenericProjectListOwner();
+	public Response queryGenericProjectListOwner(UserProject userProject) {
+		List<GenericProject> projectList = genericProjectService.queryGenericProjectListOwner(userProject);
 		return HttpResult.ok(projectList);
 	}
 

@@ -1,6 +1,7 @@
 package cn.youngkbt.generic.base.service;
 
 import cn.youngkbt.generic.base.model.GenericProject;
+import cn.youngkbt.generic.base.model.UserProject;
 import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -20,12 +21,19 @@ public interface GenericProjectService {
 	 * @return 根据 ID 查询出的实体对象
 	 */
 	public List<GenericProject> queryGenericProjectByConditions(List<ConditionVo> conditionVos);
+
+	/**
+	 * 查询所有数据
+	 * @return 所有数据的实体对象集合
+	 */
+	List<GenericProject> queryGenericProjectList(GenericProject genericProject);
+	
 	
 	/**
 	 * 查询个人的所有数据
 	 * @return 所有数据的实体对象集合
 	 */
-	public List<GenericProject> queryGenericProjectListOwner();
+	public List<GenericProject> queryGenericProjectListOwner(UserProject userProject);
 	
 	/**
 	 * 查询分页数据
@@ -67,5 +75,4 @@ public interface GenericProjectService {
 	 * @return 删除的行数
 	 */
 	public int deleteGenericProjectByColumns(QueryWrapper<GenericProject> queryWrapper);
-
 }

@@ -30,7 +30,7 @@ public class UserProject {
 	/**
 	 * 项目是用户创建的还是加入的：0 创建，1 加入
 	 */
-	private Integer type;
+	private Integer enterType;
 	/**
 	 * 创建时间
 	 */

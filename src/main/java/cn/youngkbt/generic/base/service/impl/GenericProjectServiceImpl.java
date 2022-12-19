@@ -55,9 +55,18 @@ public class GenericProjectServiceImpl implements GenericProjectService {
     }
 
     @Override
-    public List<GenericProject> queryGenericProjectListOwner() {
+    public List<GenericProject> queryGenericProjectList(GenericProject genericProject) {
+        QueryWrapper<GenericProject> queryWrapper = new QueryWrapper<>();
+        // 如果 genericCategory 没有数据，则返回全部数据
+        queryWrapper.setEntity(genericProject);
+        List<GenericProject> projectList = genericProjectMapper.selectList(queryWrapper);
+        return projectList;
+    }
+
+    @Override
+    public List<GenericProject> queryGenericProjectListOwner(UserProject userProject) {
         String username = SecurityUtils.getUsername();
-        String key = username + "_project_";
+        String key = username + "_project_" + userProject.getEnterType();
         // 从 Redis 拿缓存
         Object o = redisTemplate.opsForValue().get(key);
         if (o instanceof List) {
@@ -65,7 +74,8 @@ public class GenericProjectServiceImpl implements GenericProjectService {
             LOGGER.info("从 Redis 拿到数据：{}", projectList);
             return projectList;
         }
-        List<GenericProject> projectList = userProjectMapper.queryGenericProjectListOwner(username);
+        userProject.setUsername(username);
+        List<GenericProject> projectList = userProjectMapper.queryGenericProjectListOwner(userProject);
         redisTemplate.opsForValue().set(key, projectList, 24, TimeUnit.HOURS);
         return projectList;
     }
@@ -123,7 +133,7 @@ public class GenericProjectServiceImpl implements GenericProjectService {
         userProject.setProjectId(genericProject.getId());
         // 默认都是开发者
         userProject.setRoleId(2);
-        userProject.setType(0);
+        userProject.setEnterType(0);
         userProjectMapper.insert(userProject);
         if (i == 0) {
             return null;

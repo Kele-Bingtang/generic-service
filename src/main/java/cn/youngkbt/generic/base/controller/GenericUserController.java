@@ -70,7 +70,7 @@ public class GenericUserController {
         List<GenericUser> userList = genericUserService.queryGenericUserList(genericUser);
         return HttpResult.ok(userList);
     }
-
+    
     @GetMapping("/queryGenericUserListPages")
     public Response queryGenericUserListPages(GenericUser genericUser, @RequestParam(defaultValue = "1", required = false) Integer pageNo, @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
         IPage<GenericUser> page = new Page<>(pageNo, pageSize);
@@ -83,6 +83,15 @@ public class GenericUserController {
         IPage<GenericUser> page = new Page<>(pageNo, pageSize);
         IPage<GenericUser> categoryList = genericUserService.queryGenericUserConditionsPages(page, conditionVos);
         return HttpResult.ok(categoryList.getRecords());
+    }
+
+    @GetMapping("/queryGenericMemberInProject")
+    public Response queryGenericMemberInProject(@RequestParam() String secretKey, @RequestParam(defaultValue = "1", required = false) Integer pageNo, @RequestParam(defaultValue = "50", required = false) Integer pageSize) {
+        if(StringUtils.isBlank(secretKey)) {
+            return HttpResult.fail("请携带有效的参数！");
+        }
+        List<GenericUser> categoryList = genericUserService.queryGenericMemberInProject(secretKey, pageNo, pageSize);
+        return HttpResult.ok(categoryList);
     }
 
     @PostMapping("/insertGenericUser")

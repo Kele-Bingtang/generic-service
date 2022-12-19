@@ -45,6 +45,15 @@ public interface GenericUserService {
 	public IPage<GenericUser> queryGenericUserConditionsPages(IPage<GenericUser> page, List<ConditionVo> conditionVos);
 
 	/**
+	 * 查询分页的项目成员数据
+	 * @param secretKey 项目密钥
+	 * @param pageNo 当前页
+	 * @param pageSize 一页显示多少数据
+	 * @return 所有数据的实体对象集合
+	 */
+	public List<GenericUser> queryGenericMemberInProject(String secretKey, Integer pageNo, Integer pageSize);
+
+	/**
 	 * 插入一条数据
 	 * @param genericUser 实体对象
 	 * @return 插入的数据

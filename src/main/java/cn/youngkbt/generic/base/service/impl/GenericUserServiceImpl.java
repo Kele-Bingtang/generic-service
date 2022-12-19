@@ -1,6 +1,7 @@
 package cn.youngkbt.generic.base.service.impl;
 
 import cn.youngkbt.generic.base.mapper.GenericUserMapper;
+import cn.youngkbt.generic.base.mapper.UserProjectMapper;
 import cn.youngkbt.generic.base.model.GenericProject;
 import cn.youngkbt.generic.base.model.GenericUser;
 import cn.youngkbt.generic.base.service.GenericProjectService;
@@ -12,10 +13,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -27,10 +28,12 @@ import java.util.List;
 public class GenericUserServiceImpl implements GenericUserService {
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-	@Autowired
+	@Resource
 	private GenericUserMapper genericUserMapper;
-	@Autowired
+	@Resource
 	private GenericProjectService genericProjectService;
+	@Resource
+	private UserProjectMapper userProjectMapper;
 
 	@Override
 	public List<GenericUser> queryGenericUserByConditions(List<ConditionVo> conditionVos) {
@@ -77,6 +80,12 @@ public class GenericUserServiceImpl implements GenericUserService {
 		} catch (Exception e) {
 			throw new ConditionSqlException();
 		}
+	}
+
+	@Override
+	public List<GenericUser> queryGenericMemberInProject(String secretKey, Integer pageNo, Integer pageSize) {
+		Integer currentPage = (pageNo - 1) * pageSize;
+		return userProjectMapper.queryGenericMemberInProject(secretKey, currentPage, pageSize);
 	}
 
 	@Override

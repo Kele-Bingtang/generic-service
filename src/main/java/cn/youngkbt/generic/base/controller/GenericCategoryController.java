@@ -37,7 +37,7 @@ public class GenericCategoryController {
         List<GenericCategory> categoryList = genericCategoryService.queryGenericCategoryList(genericCategory);
         return HttpResult.ok(categoryList);
     }
-
+    
     @GetMapping("/queryGenericCategoryListPages")
     public Response queryGenericCategoryListPages(GenericCategory genericCategory, @RequestParam(defaultValue = "1", required = false) Integer pageNo, @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
         IPage<GenericCategory> page = new Page<>(pageNo, pageSize);

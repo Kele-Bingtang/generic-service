@@ -186,7 +186,7 @@ public class GenericServiceServiceImpl implements GenericServiceService {
     }
 
     public void deleteCachedKeys() {
-        Set<String> keys = redisTemplate.keys(SecurityUtils.getUsername() + "_service_*");
+        Set<String> keys = redisTemplate.keys(SecurityUtils.getUsername() + "_service*");
         if(null != keys) {
             Long delete = redisTemplate.delete(keys);
             if(null != delete) {

@@ -176,7 +176,7 @@ public class GenericCategoryServiceImpl implements GenericCategoryService {
     }
 
     public void deleteCachedKeys() {
-        Set<String> keys = redisTemplate.keys(SecurityUtils.getUsername() + "_category_*");
+        Set<String> keys = redisTemplate.keys(SecurityUtils.getUsername() + "_category*");
         if (null != keys) {
             Long delete = redisTemplate.delete(keys);
             if (null != delete) {
