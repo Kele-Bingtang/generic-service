@@ -1,5 +1,6 @@
 package cn.youngkbt.generic.base.service;
 
+import cn.youngkbt.generic.base.model.GenericRole;
 import cn.youngkbt.generic.base.model.GenericUser;
 import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -38,6 +39,11 @@ public interface GenericUserService {
 	public GenericUser findByUsername(String username);
 
 	/**
+	 * 查询用户所在的项目角色
+	 */
+	public GenericRole queryGenericUserRole(String secretKey);
+
+	/**
 	 * 查询分页数据
 	 * @param page 分页信息
 	 * @return 所有数据的实体对象集合
@@ -74,4 +80,12 @@ public interface GenericUserService {
 	 */
 	public GenericUser deleteGenericUserById(GenericUser genericUser);
 
+	/**
+	 * 更新用户在该项目的角色信息
+	 * @param username 更新的用户名
+	 * @param secretKey 更新角色所在的项目
+	 * @param roleCode 更新的角色
+	 * @return 受影响的行数
+	 */
+	public int updateGenericUserRole(String username ,String secretKey, String roleCode);
 }

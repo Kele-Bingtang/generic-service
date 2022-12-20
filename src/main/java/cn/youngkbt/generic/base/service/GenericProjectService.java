@@ -23,10 +23,10 @@ public interface GenericProjectService {
 	public List<GenericProject> queryGenericProjectByConditions(List<ConditionVo> conditionVos);
 
 	/**
-	 * 查询所有数据
-	 * @return 所有数据的实体对象集合
+	 * 根据项目的密钥查询项目信息
+	 * @return 项目信息
 	 */
-	List<GenericProject> queryGenericProjectList(GenericProject genericProject);
+	public GenericProject queryGenericOneProject(String secretKey);
 	
 	
 	/**

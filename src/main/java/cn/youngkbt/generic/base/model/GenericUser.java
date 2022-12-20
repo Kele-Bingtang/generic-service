@@ -2,6 +2,7 @@ package cn.youngkbt.generic.base.model;
 
 import cn.youngkbt.generic.valid.annotation.IncludeValid;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -48,7 +49,7 @@ public class GenericUser {
 	@Email(message = "邮箱格式不正确！", groups = UserInsert.class)
 	private String email;
 	/**
-	 * 性别：0 无，1 男，2 女
+	 * 性别：0 保密，1 男，2 女
 	 */
 	@IncludeValid(value = {"0", "1", "2"}, message = "性别 0 无，1 男，2 女，请传入数字", groups = UserUpdate.class)
 	private Integer gender;
@@ -78,6 +79,12 @@ public class GenericUser {
 	@Null(message = "不允许传入修改时间，系统自动创建", groups = {GenericService.ServiceInsert.class, GenericService.ServiceUpdate.class})
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date modifyTime;
+
+	/**
+	 * 用户的角色信息
+	 */
+	@TableField(exist = false)
+	private GenericRole genericRole;
 
 	public interface UserInsert {
 	}

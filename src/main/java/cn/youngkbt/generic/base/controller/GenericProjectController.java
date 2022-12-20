@@ -5,6 +5,7 @@ import cn.youngkbt.generic.base.model.UserProject;
 import cn.youngkbt.generic.base.service.GenericProjectService;
 import cn.youngkbt.generic.http.HttpResult;
 import cn.youngkbt.generic.http.Response;
+import cn.youngkbt.generic.utils.ObjectUtils;
 import cn.youngkbt.generic.utils.StringUtils;
 import cn.youngkbt.generic.valid.ValidList;
 import cn.youngkbt.generic.vo.ConditionVo;
@@ -34,13 +35,16 @@ public class GenericProjectController {
 		return HttpResult.ok(project);
 	}
 
-	@GetMapping("/queryGenericProjectList")
-	public Response queryGenericProjectList(GenericProject genericProject) {
-		if(StringUtils.isBlank(genericProject.getSecretKey())) {
-			return HttpResult.fail("请携带有效的参数！");
+	@GetMapping("/queryGenericOneProject/{secretKey}")
+	public Response queryGenericProjectList(@PathVariable("secretKey") String secretKey) {
+		if(StringUtils.isBlank(secretKey)) {
+			return HttpResult.fail("无效的参数");
 		}
-		List<GenericProject> projectList = genericProjectService.queryGenericProjectList(genericProject);
-		return HttpResult.ok(projectList);
+		GenericProject project = genericProjectService.queryGenericOneProject(secretKey);
+		if(ObjectUtils.isEmpty(project) || ObjectUtils.isEmpty(project.getId())) {
+			return HttpResult.fail("无效的参数");
+		}
+		return HttpResult.ok(project);
 	}
 
 	@GetMapping("/queryGenericProjectListOwner")

@@ -16,8 +16,17 @@ public class StringUtils {
      * @param content 内容
      * @return true：为空，false：不为空
      */
-    public static boolean isBlank(Object content) {
+    public static boolean isBlank(String content) {
         return null == content || "".equals(content);
+    }
+
+    public static boolean isBlank(String... content) {
+        for (String s : content) {
+            if (isBlank(s)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -26,7 +35,11 @@ public class StringUtils {
      * @param content 内容
      * @return true：不为空，false：为空
      */
-    public static boolean isNotBlank(Object content) {
+    public static boolean isNotBlank(String content) {
+        return !isBlank(content);
+    }
+
+    public static boolean isNotBlank(String ...content) {
         return !isBlank(content);
     }
 

@@ -1,5 +1,6 @@
 package cn.youngkbt.generic.base.model;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -10,6 +11,7 @@ import java.sql.Timestamp;
  * @note 1.0
  */
 @Data
+@TableName("user_project")
 public class UserProject {
 	/**
 	 * 主键

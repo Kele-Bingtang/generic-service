@@ -16,8 +16,20 @@ import java.util.List;
 @Mapper
 public interface UserProjectMapper extends BaseMapper<UserProject> {
 
+    /**
+     * 查询用户所在的项目，包括：所有、创建的、加入的项目
+     * @param userProject 项目对象
+     * @return 用户所在的项目，包括：所有、创建的、加入的项目
+     */
     public List<GenericProject> queryGenericProjectListOwner(UserProject userProject);
-    
+
+    /**
+     * 通过项目密钥查询该项目的所有用户，包括用户的角色
+     * @param secretKey 项目密钥
+     * @param currentPage 当前页
+     * @param pageSize 一页显示的数据
+     * @return 该项目的所有用户，包括用户的角色
+     */
     public List<GenericUser> queryGenericMemberInProject(String secretKey, Integer currentPage, Integer pageSize);
     
 }

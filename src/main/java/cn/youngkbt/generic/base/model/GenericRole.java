@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -15,6 +16,7 @@ import java.util.Date;
  * @date 2022/12/10 21:32
  * @note
  */
+@Data
 @TableName("generic_role")
 public class GenericRole {
 
@@ -44,12 +46,6 @@ public class GenericRole {
     @Null(message = "不允许传入修改时间，系统自动创建", groups = {RoleInsert.class, RoleUpdate.class})
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date modifyTime;
-  
-    @NotNull(message = "项目 id 不能为空", groups = RoleInsert.class)
-    private Integer projectId;
- 
-    @NotNull(message = "目录 id 不能为空", groups = RoleInsert.class)
-    private Integer serviceId;
     
     interface RoleInsert {
     }

@@ -4,10 +4,13 @@ import cn.youngkbt.generic.base.mapper.GenericProjectMapper;
 import cn.youngkbt.generic.base.mapper.UserProjectMapper;
 import cn.youngkbt.generic.base.model.GenericCategory;
 import cn.youngkbt.generic.base.model.GenericProject;
+import cn.youngkbt.generic.base.model.GenericRole;
 import cn.youngkbt.generic.base.model.UserProject;
 import cn.youngkbt.generic.base.service.GenericCategoryService;
 import cn.youngkbt.generic.base.service.GenericProjectService;
+import cn.youngkbt.generic.base.service.GenericRoleService;
 import cn.youngkbt.generic.exception.ConditionSqlException;
+import cn.youngkbt.generic.utils.ObjectUtils;
 import cn.youngkbt.generic.utils.SearchUtils;
 import cn.youngkbt.generic.utils.SecureUtils;
 import cn.youngkbt.generic.utils.SecurityUtils;
@@ -40,6 +43,8 @@ public class GenericProjectServiceImpl implements GenericProjectService {
     @Resource
     private GenericCategoryService genericCategoryService;
     @Resource
+    private GenericRoleService genericRoleService;
+    @Resource
     private UserProjectMapper userProjectMapper;
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
@@ -55,12 +60,10 @@ public class GenericProjectServiceImpl implements GenericProjectService {
     }
 
     @Override
-    public List<GenericProject> queryGenericProjectList(GenericProject genericProject) {
+    public GenericProject queryGenericOneProject(String secretKey) {
         QueryWrapper<GenericProject> queryWrapper = new QueryWrapper<>();
-        // 如果 genericCategory 没有数据，则返回全部数据
-        queryWrapper.setEntity(genericProject);
-        List<GenericProject> projectList = genericProjectMapper.selectList(queryWrapper);
-        return projectList;
+        queryWrapper.eq("secret_key", secretKey);
+        return genericProjectMapper.selectOne(queryWrapper);
     }
 
     @Override
@@ -131,8 +134,14 @@ public class GenericProjectServiceImpl implements GenericProjectService {
         UserProject userProject = new UserProject();
         userProject.setUsername(SecurityUtils.getUsername());
         userProject.setProjectId(genericProject.getId());
-        // 默认都是开发者
-        userProject.setRoleId(2);
+        // 默认创建者是管理员
+        GenericRole admin = genericRoleService.queryGenericRoleByCode("admin");
+        Integer adminId = admin.getId();
+        if(ObjectUtils.isNotEmpty(adminId)) {
+            userProject.setRoleId(adminId);
+        }else {
+            userProject.setProjectId(1);
+        }
         userProject.setEnterType(0);
         userProjectMapper.insert(userProject);
         if (i == 0) {
@@ -190,7 +199,7 @@ public class GenericProjectServiceImpl implements GenericProjectService {
         }
         return i;
     }
-
+    
     public void deleteCachedKeys() {
         Set<String> keys = redisTemplate.keys(SecurityUtils.getUsername() + "_project*");
         if (null != keys) {
