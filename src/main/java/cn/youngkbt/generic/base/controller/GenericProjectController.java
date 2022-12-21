@@ -6,7 +6,6 @@ import cn.youngkbt.generic.base.service.GenericProjectService;
 import cn.youngkbt.generic.http.HttpResult;
 import cn.youngkbt.generic.http.Response;
 import cn.youngkbt.generic.utils.ObjectUtils;
-import cn.youngkbt.generic.utils.StringUtils;
 import cn.youngkbt.generic.valid.ValidList;
 import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -15,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 /**
@@ -24,23 +24,21 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/genericProject")
+@Validated
 public class GenericProjectController {
 
 	@Autowired
 	private GenericProjectService genericProjectService;
 
 	@GetMapping("/queryGenericProjectByConditions")
-	public Response queryGenericProjectByConditions(@RequestBody List<ConditionVo> conditionVos) {
+	public Response queryGenericProjectByConditions(@Validated @RequestBody ValidList<ConditionVo> conditionVos) {
 		List<GenericProject> project = genericProjectService.queryGenericProjectByConditions(conditionVos);
 		return HttpResult.ok(project);
 	}
 
 	@GetMapping("/queryGenericOneProject/{secretKey}")
-	public Response queryGenericProjectList(@PathVariable("secretKey") String secretKey) {
-		if(StringUtils.isBlank(secretKey)) {
-			return HttpResult.fail("无效的参数");
-		}
-		GenericProject project = genericProjectService.queryGenericOneProject(secretKey);
+	public Response queryGenericOneProjectBySecretKey(@NotBlank(message = "无效的参数") @PathVariable("secretKey") String secretKey) {
+		GenericProject project = genericProjectService.queryGenericOneProjectBySecretKey(secretKey);
 		if(ObjectUtils.isEmpty(project) || ObjectUtils.isEmpty(project.getId())) {
 			return HttpResult.fail("无效的参数");
 		}

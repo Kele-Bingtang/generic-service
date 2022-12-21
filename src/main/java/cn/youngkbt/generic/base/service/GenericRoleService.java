@@ -8,7 +8,7 @@ import cn.youngkbt.generic.base.model.GenericRole;
  * @note
  */
 public interface GenericRoleService {
-    public GenericRole queryGenericRoleByUserAndSecret(String username, String secretKey);
+    public GenericRole queryGenericRoleByUserAndProject(String username, String secretKey);
     
     public GenericRole queryGenericRoleByCode(String code);
 }

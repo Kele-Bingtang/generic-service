@@ -4,8 +4,10 @@ import cn.youngkbt.generic.base.model.ServiceCol;
 import cn.youngkbt.generic.base.service.ServiceColService;
 import cn.youngkbt.generic.http.HttpResult;
 import cn.youngkbt.generic.http.Response;
+import cn.youngkbt.generic.valid.ValidList;
 import cn.youngkbt.generic.vo.ConditionVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +25,7 @@ public class ServiceColController {
 	private ServiceColService serviceColService;
 
 	@GetMapping("/queryServiceColByConditions")
-	public Response queryServiceColByConditions(@RequestBody List<ConditionVo> conditionVos) {
+	public Response queryServiceColByConditions(@Validated @RequestBody ValidList<ConditionVo> conditionVos) {
 		List<ServiceCol> colList = serviceColService.queryServiceColByConditions(conditionVos);
 		return HttpResult.ok(colList);
 	}

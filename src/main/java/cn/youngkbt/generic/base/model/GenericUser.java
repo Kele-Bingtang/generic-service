@@ -51,7 +51,7 @@ public class GenericUser {
 	/**
 	 * 性别：0 保密，1 男，2 女
 	 */
-	@IncludeValid(value = {"0", "1", "2"}, message = "性别 0 无，1 男，2 女，请传入数字", groups = UserUpdate.class)
+	@IncludeValid(value = {"0", "1", "2"}, message = "性别：0 保密，1 男，2 女，请传入数字")
 	private Integer gender;
 	/**
 	 * 生日

@@ -26,7 +26,7 @@ public interface GenericProjectService {
 	 * 根据项目的密钥查询项目信息
 	 * @return 项目信息
 	 */
-	public GenericProject queryGenericOneProject(String secretKey);
+	public GenericProject queryGenericOneProjectBySecretKey(String secretKey);
 	
 	
 	/**

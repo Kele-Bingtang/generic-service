@@ -1,7 +1,6 @@
 package cn.youngkbt.generic.base.service.impl;
 
 import cn.youngkbt.generic.base.mapper.GenericUserMapper;
-import cn.youngkbt.generic.base.mapper.UserProjectMapper;
 import cn.youngkbt.generic.base.model.GenericProject;
 import cn.youngkbt.generic.base.model.GenericRole;
 import cn.youngkbt.generic.base.model.GenericUser;
@@ -9,6 +8,7 @@ import cn.youngkbt.generic.base.model.UserProject;
 import cn.youngkbt.generic.base.service.GenericProjectService;
 import cn.youngkbt.generic.base.service.GenericRoleService;
 import cn.youngkbt.generic.base.service.GenericUserService;
+import cn.youngkbt.generic.base.service.UserProjectService;
 import cn.youngkbt.generic.exception.ConditionSqlException;
 import cn.youngkbt.generic.utils.ObjectUtils;
 import cn.youngkbt.generic.utils.SearchUtils;
@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,7 +42,7 @@ public class GenericUserServiceImpl implements GenericUserService {
     @Resource
     private GenericRoleService genericRoleService;
     @Resource
-    private UserProjectMapper userProjectMapper;
+    private UserProjectService userProjectService;
 
     @Override
     public List<GenericUser> queryGenericUserByConditions(List<ConditionVo> conditionVos) {
@@ -54,11 +55,8 @@ public class GenericUserServiceImpl implements GenericUserService {
     }
 
     @Override
-    public List<GenericUser> queryGenericUserList(GenericUser genericUser) {
-        QueryWrapper<GenericUser> queryWrapper = new QueryWrapper<>();
-        // 如果 genericCategory 没有数据，则返回全部数据
-        queryWrapper.setEntity(genericUser);
-        return genericUserMapper.selectList(queryWrapper);
+    public List<GenericUser> queryAllMemberNotInProject(String secretKey) {
+        return userProjectService.queryAllMemberNotInProject(secretKey);
     }
 
     @Override
@@ -83,7 +81,7 @@ public class GenericUserServiceImpl implements GenericUserService {
     @Override
     public GenericRole queryGenericUserRole(String secretKey) {
         String username = SecurityUtils.getUsername();
-        return genericRoleService.queryGenericRoleByUserAndSecret(username, secretKey);
+        return genericRoleService.queryGenericRoleByUserAndProject(username, secretKey);
     }
 
     @Override
@@ -99,7 +97,7 @@ public class GenericUserServiceImpl implements GenericUserService {
     @Override
     public List<GenericUser> queryGenericMemberInProject(String secretKey, Integer pageNo, Integer pageSize) {
         Integer currentPage = (pageNo - 1) * pageSize;
-        return userProjectMapper.queryGenericMemberInProject(secretKey, currentPage, pageSize);
+        return userProjectService.queryGenericMemberInProject(secretKey, currentPage, pageSize);
     }
 
     @Override
@@ -135,18 +133,35 @@ public class GenericUserServiceImpl implements GenericUserService {
     }
 
     @Override
-    public int updateGenericUserRole(String username, String secretKey, String roleCode) {
-        GenericProject project = genericProjectService.queryGenericOneProject(secretKey);
-        if (ObjectUtils.isEmpty(project) && ObjectUtils.isEmpty(project.getId())) {
-            return 0;
-        }
+    public boolean updateGenericUserRole(String username, Integer projectId, String roleCode) {
         GenericRole genericRole = genericRoleService.queryGenericRoleByCode(roleCode);
         if (ObjectUtils.isEmpty(genericRole) && ObjectUtils.isEmpty(genericRole.getId())) {
-            return 0;
+            return false;
         }
         UpdateWrapper<UserProject> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("username", username).eq("project_id", project.getId()).set("role_id", genericRole.getId());
-        return userProjectMapper.update(null, updateWrapper);
+        updateWrapper.eq("username", username).eq("project_id", projectId).set("role_id", genericRole.getId());
+        return userProjectService.update(updateWrapper);
+    }
+
+    @Override
+    public boolean insertGenericUserProject(Integer projectId, List<GenericUser> userList) {
+        List<UserProject> userProjectList = new ArrayList<>();
+        userList.forEach(user -> {
+            UserProject userProject = new UserProject();
+            userProject.setUsername(user.getUsername());
+            userProject.setProjectId(projectId);
+            userProject.setRoleId(2);
+            userProject.setEnterType(1);
+            userProjectList.add(userProject);
+        });
+        return userProjectService.saveBatch(userProjectList);
+    }
+
+    @Override
+    public boolean removeOneMember(String username, Integer projectId) {
+        UpdateWrapper<UserProject> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("username", username).eq("project_id", projectId);
+        return userProjectService.remove(updateWrapper);
     }
 
 }

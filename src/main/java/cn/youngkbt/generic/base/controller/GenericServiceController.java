@@ -30,7 +30,7 @@ public class GenericServiceController {
     private GenericServiceService genericServiceService;
 
     @GetMapping("/queryGenericServiceByConditions")
-    public Response queryGenericServiceByConditions(@RequestBody List<ConditionVo> conditionVos) {
+    public Response queryGenericServiceByConditions(@Validated @RequestBody ValidList<ConditionVo> conditionVos) {
         List<GenericService> service = genericServiceService.queryGenericServiceByConditions(conditionVos);
         return HttpResult.ok(service);
     }

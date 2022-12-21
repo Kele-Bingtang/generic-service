@@ -20,7 +20,7 @@ public class GenericRoleServiceImpl implements GenericRoleService {
     private GenericRoleMapper genericRoleMapper;
 
     @Override
-    public GenericRole queryGenericRoleByUserAndSecret(String username, String secretKey) {
+    public GenericRole queryGenericRoleByUserAndProject(String username, String secretKey) {
         return genericRoleMapper.queryGenericRoleByUserAndSecret(username, secretKey);
     }
 

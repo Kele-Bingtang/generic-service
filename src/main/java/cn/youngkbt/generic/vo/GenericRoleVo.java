@@ -9,8 +9,8 @@ import lombok.Data;
  */
 @Data
 public class GenericRoleVo {
+    
     private String code;
-
     private String name;
 
 }

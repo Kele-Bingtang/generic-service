@@ -44,27 +44,40 @@
         gp.id, gp.project_name, gp.base_url, gp.description, gp.secret_key, gp.database_name, 
 		gp.create_user, gp.create_time, gp.modify_user, gp.modify_time
     </sql>
+    
+    <sql id = "baseUserColumnListSuf">
+         gu.username, gu.nickname, gu.email, gu.gender, gu.birthday, gu.phone, gu.status
+    </sql>
 
     <select id = "queryGenericProjectListOwner" parameterType = "cn.youngkbt.generic.base.model.UserProject" resultMap = "baseProjectResultMap">
         select
             <include refid = "baseProjectColumnListSuf" />
-            from generic_project gp, user_project up
-            <where>
-                gp.id = up.project_id
-                <if test = "username != null">
-                    and username = #{username}
-                </if>
-                <if test = "enterType != null">
-                    and enter_type = #{enterType}
-                </if>
-            </where>
+        from generic_project gp, user_project up
+        <where>
+            gp.id = up.project_id
+            <if test = "username != null">
+                and username = #{username}
+            </if>
+            <if test = "enterType != null">
+                and enter_type = #{enterType}
+            </if>
+        </where>
     </select>
     
-    <select id = "queryGenericMemberInProject" resultMap = "baseUserResultMap">
-        select gu.username, gu.nickname, gu.email, gu.gender, gu.birthday, gu.phone, gu.status, gr.code, gr.name
+    <select id = "queryMemberInProject" resultMap = "baseUserResultMap">
+        select 
+               <include refid = "baseUserColumnListSuf" />, gr.code, gr.name
         from generic_project gp, user_project up, generic_user gu, generic_role gr
-        where gp.secret_key = #{secretKey} and gp.id = up.id and up.id = gu.id and up.role_id = gr.id
+        where gp.secret_key = #{secretKey} and gp.id = up.project_id and up.username = gu.username and up.role_id = gr.id
             limit #{currentPage}, #{pageSize}
+    </select>
+    
+    <select id = "queryAllMemberNotInProject" resultMap = "baseUserResultMap">
+        select 
+            <include refid = "baseUserColumnListSuf" />
+        from generic_user gu where not exists
+        (select 1 from user_project up, generic_project gp
+                  where gu.username = up.username and up.project_id = gp.id and gp.secret_key = #{secretKey})
     </select>
 
 </mapper>

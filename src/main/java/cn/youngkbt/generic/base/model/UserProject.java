@@ -1,5 +1,7 @@
 package cn.youngkbt.generic.base.model;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -15,7 +17,8 @@ import java.sql.Timestamp;
 public class UserProject {
 	/**
 	 * 主键
- 	 */ 
+ 	 */
+	@TableId(type = IdType.AUTO)
 	private Integer id;
 	/**
 	 * 用户名

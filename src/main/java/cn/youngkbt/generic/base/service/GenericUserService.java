@@ -25,7 +25,7 @@ public interface GenericUserService {
 	 * 查询所有数据
 	 * @return 所有数据的实体对象集合
 	 */
-	public List<GenericUser> queryGenericUserList(GenericUser genericUser);
+	public List<GenericUser> queryAllMemberNotInProject(String secretKey);
 	
 	/**
 	 * 查询所有数据
@@ -83,9 +83,24 @@ public interface GenericUserService {
 	/**
 	 * 更新用户在该项目的角色信息
 	 * @param username 更新的用户名
-	 * @param secretKey 更新角色所在的项目
+	 * @param projectId 更新角色所在的项目 id
 	 * @param roleCode 更新的角色
-	 * @return 受影响的行数
+	 * @return true：删除成功，false：删除失败
 	 */
-	public int updateGenericUserRole(String username ,String secretKey, String roleCode);
+	public boolean updateGenericUserRole(String username ,Integer projectId, String roleCode);
+
+	/**
+	 * 添加成员到 UserProject 表
+	 * @param userList 成员信息
+	 * @return true：删除成功，false：删除失败
+	 */
+	public boolean insertGenericUserProject(Integer projectId, List<GenericUser> userList);
+
+	/**
+	 * 删除项目里一个成员
+	 * @param username 成员用户名
+	 * @param projectId 项目 id
+	 * @return true：删除成功，false：删除失败
+	 */
+	public boolean removeOneMember(String username, Integer projectId);
 }

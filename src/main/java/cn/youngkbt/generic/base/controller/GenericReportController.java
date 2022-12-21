@@ -4,6 +4,7 @@ import cn.youngkbt.generic.base.model.GenericReport;
 import cn.youngkbt.generic.base.service.GenericReportService;
 import cn.youngkbt.generic.http.HttpResult;
 import cn.youngkbt.generic.http.Response;
+import cn.youngkbt.generic.valid.ValidList;
 import cn.youngkbt.generic.vo.ConditionVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -24,7 +25,7 @@ public class GenericReportController {
 	private GenericReportService genericReportService;
 
 	@GetMapping("/queryGenericReportByConditions")
-	public Response queryGenericReportByConditions(@RequestBody List<ConditionVo> conditionVos) {
+	public Response queryGenericReportByConditions(@Validated @RequestBody ValidList<ConditionVo> conditionVos) {
 		List<GenericReport>  report = genericReportService.queryGenericReportByCondition(conditionVos);
 		return HttpResult.ok(report);
 	}

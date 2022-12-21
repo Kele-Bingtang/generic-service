@@ -1,7 +1,6 @@
 package cn.youngkbt.generic.base.service.impl;
 
 import cn.youngkbt.generic.base.mapper.GenericProjectMapper;
-import cn.youngkbt.generic.base.mapper.UserProjectMapper;
 import cn.youngkbt.generic.base.model.GenericCategory;
 import cn.youngkbt.generic.base.model.GenericProject;
 import cn.youngkbt.generic.base.model.GenericRole;
@@ -45,7 +44,7 @@ public class GenericProjectServiceImpl implements GenericProjectService {
     @Resource
     private GenericRoleService genericRoleService;
     @Resource
-    private UserProjectMapper userProjectMapper;
+    private UserProjectServiceImpl userProjectService;
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -60,7 +59,7 @@ public class GenericProjectServiceImpl implements GenericProjectService {
     }
 
     @Override
-    public GenericProject queryGenericOneProject(String secretKey) {
+    public GenericProject queryGenericOneProjectBySecretKey(String secretKey) {
         QueryWrapper<GenericProject> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("secret_key", secretKey);
         return genericProjectMapper.selectOne(queryWrapper);
@@ -78,7 +77,7 @@ public class GenericProjectServiceImpl implements GenericProjectService {
             return projectList;
         }
         userProject.setUsername(username);
-        List<GenericProject> projectList = userProjectMapper.queryGenericProjectListOwner(userProject);
+        List<GenericProject> projectList = userProjectService.queryGenericProjectListOwner(userProject);
         redisTemplate.opsForValue().set(key, projectList, 24, TimeUnit.HOURS);
         return projectList;
     }
@@ -143,7 +142,7 @@ public class GenericProjectServiceImpl implements GenericProjectService {
             userProject.setProjectId(1);
         }
         userProject.setEnterType(0);
-        userProjectMapper.insert(userProject);
+        userProjectService.save(userProject);
         if (i == 0) {
             return null;
         } else {

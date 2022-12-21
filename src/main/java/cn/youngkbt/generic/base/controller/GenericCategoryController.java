@@ -27,7 +27,7 @@ public class GenericCategoryController {
     private GenericCategoryService genericCategoryService;
 
     @GetMapping("/queryGenericCategoryByConditions")
-    public Response queryGenericCategoryByConditions(@RequestBody List<ConditionVo> conditionVos) {
+    public Response queryGenericCategoryByConditions(@Validated @RequestBody ValidList<ConditionVo> conditionVos) {
         List<GenericCategory> category = genericCategoryService.queryGenericCategoryByCondition(conditionVos);
         return HttpResult.ok(category);
     }

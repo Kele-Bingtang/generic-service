@@ -1,20 +1,18 @@
-package cn.youngkbt.generic.base.mapper;
+package cn.youngkbt.generic.base.service;
 
 import cn.youngkbt.generic.base.model.GenericProject;
 import cn.youngkbt.generic.base.model.GenericUser;
 import cn.youngkbt.generic.base.model.UserProject;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
+import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 
 /**
  * @author Kele-Bingtang
- * @date 2022/12/18 21:23
+ * @date 2022/12/21 21:55
  * @note
  */
-@Mapper
-public interface UserProjectMapper extends BaseMapper<UserProject> {
+public interface UserProjectService extends IService<UserProject> {
 
     /**
      * 查询用户所在的项目，包括：所有、创建的、加入的项目
@@ -30,7 +28,7 @@ public interface UserProjectMapper extends BaseMapper<UserProject> {
      * @param pageSize 一页显示的数据
      * @return 该项目的所有用户，包括用户的角色
      */
-    public List<GenericUser> queryMemberInProject(String secretKey, Integer currentPage, Integer pageSize);
+    public List<GenericUser> queryGenericMemberInProject(String secretKey, Integer currentPage, Integer pageSize);
 
     /**
      * 查询不在这个项目的所有成员
@@ -38,5 +36,4 @@ public interface UserProjectMapper extends BaseMapper<UserProject> {
      * @return 不在这个项目的所有成员
      */
     public List<GenericUser> queryAllMemberNotInProject(String secretKey);
-    
 }
