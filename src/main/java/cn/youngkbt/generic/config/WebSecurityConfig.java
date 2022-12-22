@@ -3,7 +3,6 @@ package cn.youngkbt.generic.config;
 import cn.youngkbt.generic.security.JwtAuthenticationFilter;
 import cn.youngkbt.generic.security.LoginFailureHandler;
 import cn.youngkbt.generic.security.LoginSuccessHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
+import javax.annotation.Resource;
+
 /**
  * @author Kele-Bingtang
  * @date 2022/12/10 21:52
@@ -26,7 +27,7 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 @EnableWebSecurity
 public class WebSecurityConfig  extends WebSecurityConfigurerAdapter {
 
-    @Autowired
+    @Resource
     @Qualifier("userDetailsServiceImpl")
     private UserDetailsService userDetailsService;
 

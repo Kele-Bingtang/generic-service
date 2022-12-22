@@ -198,7 +198,7 @@ public class GenericProjectServiceImpl implements GenericProjectService {
         }
         return i;
     }
-    
+
     public void deleteCachedKeys() {
         Set<String> keys = redisTemplate.keys(SecurityUtils.getUsername() + "_project*");
         if (null != keys) {

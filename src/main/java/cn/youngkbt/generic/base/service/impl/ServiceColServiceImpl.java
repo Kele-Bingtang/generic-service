@@ -8,9 +8,9 @@ import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -22,7 +22,7 @@ import java.util.List;
 public class ServiceColServiceImpl implements ServiceColService {
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-	@Autowired
+	@Resource
 	private ServiceColMapper serviceColMapper;
 
 	@Override

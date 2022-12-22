@@ -15,10 +15,10 @@ import cn.youngkbt.generic.vo.GenericUserVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -36,11 +36,11 @@ import java.util.Map;
 @Validated
 public class GenericUserController {
 
-    @Autowired
+    @Resource
     private GenericUserService genericUserService;
 
     @PostMapping("/getUserInfo")
-    public Response getUserInfo(@NotBlank(message = "无效的参数") String token) {
+    public Response getUserInfo(@NotBlank(message = "无效参数") String token) {
         String username = JwtTokenUtils.getUsernameFromToken(token);
         if (StringUtils.isBlank(username)) {
             return HttpResult.fail("获取用户信息失败");
@@ -75,7 +75,7 @@ public class GenericUserController {
     }
 
     @GetMapping("/queryGenericMemberInProject/{secretKey}")
-    public Response queryGenericMemberInProject(@NotBlank(message = "无效的参数") @PathVariable("secretKey") String secretKey, @RequestParam(defaultValue = "1", required = false) Integer pageNo, @RequestParam(defaultValue = "50", required = false) Integer pageSize) {
+    public Response queryGenericMemberInProject(@NotBlank(message = "无效参数") @PathVariable("secretKey") String secretKey, @RequestParam(defaultValue = "1", required = false) Integer pageNo, @RequestParam(defaultValue = "50", required = false) Integer pageSize) {
         List<GenericUser> userList = genericUserService.queryGenericMemberInProject(secretKey, pageNo, pageSize);
         List<GenericUserVo> userVoList = new ArrayList<>();
         userList.forEach(user -> {
@@ -92,7 +92,7 @@ public class GenericUserController {
     }
 
     @GetMapping("/queryAllMemberNotInProject/{secretKey}")
-    public Response queryAllMemberNotInProject(@NotBlank(message = "无效的参数") @PathVariable("secretKey") String secretKey) {
+    public Response queryAllMemberNotInProject(@NotBlank(message = "无效参数") @PathVariable("secretKey") String secretKey) {
         List<GenericUser> userList = genericUserService.queryAllMemberNotInProject(secretKey);
         List<Map<String, String>> userListMap = new ArrayList<>();
         userList.forEach(user -> {
@@ -111,10 +111,10 @@ public class GenericUserController {
     }
 
     @GetMapping("/queryGenericUserRole/{secretKey}")
-    public Response queryGenericUserRole(@NotBlank(message = "无效的参数") @PathVariable("secretKey") String secretKey) {
+    public Response queryGenericUserRole(@NotBlank(message = "无效参数") @PathVariable("secretKey") String secretKey) {
         GenericRole role = genericUserService.queryGenericUserRole(secretKey);
         if (ObjectUtils.isEmpty(role) || ObjectUtils.isEmpty(role.getCode())) {
-            return HttpResult.fail("无效的参数");
+            return HttpResult.fail("无效参数");
         }
         GenericRoleVo genericRoleVo = new GenericRoleVo();
         genericRoleVo.setCode(role.getCode());
@@ -141,7 +141,7 @@ public class GenericUserController {
     }
 
     @PostMapping("/updateGenericUserRole")
-    public Response updateGenericUserRole(@NotBlank(message = "无效的参数") String username, @NotNull(message = "无效的参数") Integer projectId, @NotBlank(message = "无效的参数") String roleCode) {
+    public Response updateGenericUserRole(@NotBlank(message = "无效参数") String username, @NotNull(message = "无效参数") Integer projectId, @NotBlank(message = "无效参数") String roleCode) {
         boolean isSuccess = genericUserService.updateGenericUserRole(username, projectId, roleCode);
         if (!isSuccess) {
             return HttpResult.fail("更新角色失败");
@@ -150,7 +150,7 @@ public class GenericUserController {
     }
 
     @PostMapping("/insertGenericUserProject/{projectId}")
-    public Response insertGenericUserProject(@NotNull(message = "无效的参数") @PathVariable("projectId") Integer projectId, @RequestBody List<GenericUser> userList) {
+    public Response insertGenericUserProject(@NotNull(message = "无效参数") @PathVariable("projectId") Integer projectId, @RequestBody List<GenericUser> userList) {
         boolean isSuccess = genericUserService.insertGenericUserProject(projectId, userList);
         if (!isSuccess) {
             return HttpResult.fail("添加成员失败");
@@ -159,12 +159,12 @@ public class GenericUserController {
     }
 
     @PostMapping("/removeOneMember")
-    public Response removeOneMember(@NotNull(message = "无效的参数") String username, @NotNull(message = "无效的参数")Integer projectId) {
+    public Response removeOneMember(@NotNull(message = "无效参数") String username, @NotNull(message = "无效参数")Integer projectId) {
         boolean isSuccess = genericUserService.removeOneMember(username, projectId);
         if (!isSuccess) {
-            return HttpResult.fail("删除成员失败");
+            return HttpResult.fail("成员/个人离开项目失败");
         }
-        return HttpResult.ok("删除成员成功");
+        return HttpResult.ok("成员/个人离开项目成功");
     }
 
     public void convertModelToVo(GenericUser user, GenericUserVo userVo) {
@@ -176,9 +176,9 @@ public class GenericUserController {
         }
         if (user.getGender() == 0) {
             userVo.setGender("保密");
-        } else if (user.getStatus() == 1) {
+        } else if (user.getGender() == 1) {
             userVo.setGender("男");
-        } else if (user.getStatus() == 2) {
+        } else if (user.getGender() == 2) {
             userVo.setGender("女");
         }
     }

@@ -10,10 +10,10 @@ import cn.youngkbt.generic.valid.ValidList;
 import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -27,7 +27,7 @@ import java.util.List;
 @Validated
 public class GenericProjectController {
 
-	@Autowired
+	@Resource
 	private GenericProjectService genericProjectService;
 
 	@GetMapping("/queryGenericProjectByConditions")
@@ -37,10 +37,10 @@ public class GenericProjectController {
 	}
 
 	@GetMapping("/queryGenericOneProject/{secretKey}")
-	public Response queryGenericOneProjectBySecretKey(@NotBlank(message = "无效的参数") @PathVariable("secretKey") String secretKey) {
+	public Response queryGenericOneProjectBySecretKey(@NotBlank(message = "无效参数") @PathVariable("secretKey") String secretKey) {
 		GenericProject project = genericProjectService.queryGenericOneProjectBySecretKey(secretKey);
 		if(ObjectUtils.isEmpty(project) || ObjectUtils.isEmpty(project.getId())) {
-			return HttpResult.fail("无效的参数");
+			return HttpResult.fail("无效参数");
 		}
 		return HttpResult.ok(project);
 	}

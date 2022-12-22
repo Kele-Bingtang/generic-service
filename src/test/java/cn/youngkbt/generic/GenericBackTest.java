@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class GenericBackTest {
     
-    // @Autowired
+    // @Resource
     // DbdToBean dbdToBean;
     //
     // @Test

@@ -39,6 +39,8 @@ public interface GenericServiceService {
 	 * @return 所有数据的实体对象集合
 	 */
 	public IPage<GenericService> queryGenericServiceConditionsPages(IPage<GenericService> page, List<ConditionVo> conditionVos);
+	
+	
 
 	/**
 	 * 插入一条数据

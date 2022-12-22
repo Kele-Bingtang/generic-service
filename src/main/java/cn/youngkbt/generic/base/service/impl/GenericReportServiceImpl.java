@@ -9,9 +9,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -23,7 +23,7 @@ import java.util.List;
 public class GenericReportServiceImpl implements GenericReportService {
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-	@Autowired
+	@Resource
 	private GenericReportMapper genericReportMapper;
 
 	@Override

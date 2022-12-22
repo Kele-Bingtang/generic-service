@@ -33,10 +33,10 @@ import java.util.concurrent.TimeUnit;
 public class GenericCategoryServiceImpl implements GenericCategoryService {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
+    @Resource
     private GenericCategoryMapper genericCategoryMapper;
 
-    @Autowired
+    @Resource
     private GenericServiceService genericServiceService;
 
     @Resource

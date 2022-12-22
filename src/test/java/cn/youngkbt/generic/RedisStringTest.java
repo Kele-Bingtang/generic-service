@@ -14,7 +14,7 @@ import org.springframework.data.redis.core.ValueOperations;
 @SpringBootTest
 public class RedisStringTest {
     
-    @Autowired
+    @Resource
     private RedisTemplate<String, String> redisTemplate;
     
     @Test

@@ -75,4 +75,5 @@ public interface GenericProjectService {
 	 * @return 删除的行数
 	 */
 	public int deleteGenericProjectByColumns(QueryWrapper<GenericProject> queryWrapper);
+	
 }

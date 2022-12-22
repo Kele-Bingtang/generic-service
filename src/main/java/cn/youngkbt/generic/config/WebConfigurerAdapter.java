@@ -1,11 +1,16 @@
 package cn.youngkbt.generic.config;
 
+import cn.youngkbt.generic.http.annotation.resolver.RequestUriArgumentResolver;
+import cn.youngkbt.generic.http.annotation.resolver.RequestUrlArgumentResolver;
 import cn.youngkbt.generic.log.LogInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 /**
  * @author Kele-Bingtang
@@ -40,5 +45,15 @@ public class WebConfigurerAdapter implements WebMvcConfigurer {
         // 可以具体制定哪些需要拦截，哪些不拦截，其实也可以使用自定义注解更灵活完成
         //        .addPathPatterns("/**")
         //       .excludePathPatterns("/test.html");
+    }
+
+    /**
+     * 添加自定义注解
+     * @param resolvers initially an empty list
+     */
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(new RequestUrlArgumentResolver());
+        resolvers.add(new RequestUriArgumentResolver());
     }
 }

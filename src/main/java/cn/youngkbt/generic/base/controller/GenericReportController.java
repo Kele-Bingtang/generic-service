@@ -6,10 +6,10 @@ import cn.youngkbt.generic.http.HttpResult;
 import cn.youngkbt.generic.http.Response;
 import cn.youngkbt.generic.valid.ValidList;
 import cn.youngkbt.generic.vo.ConditionVo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -21,7 +21,7 @@ import java.util.List;
 @RequestMapping("/genericReport")
 public class GenericReportController {
 
-	@Autowired
+	@Resource
 	private GenericReportService genericReportService;
 
 	@GetMapping("/queryGenericReportByConditions")

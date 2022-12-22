@@ -10,10 +10,10 @@ import cn.youngkbt.generic.vo.GenericServiceVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +26,7 @@ import java.util.List;
 @RequestMapping("/genericService")
 public class GenericServiceController {
 
-    @Autowired
+    @Resource
     private GenericServiceService genericServiceService;
 
     @GetMapping("/queryGenericServiceByConditions")
