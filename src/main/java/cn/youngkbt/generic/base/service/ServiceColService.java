@@ -3,7 +3,9 @@ package cn.youngkbt.generic.base.service;
 import cn.youngkbt.generic.base.model.ServiceCol;
 import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.sql.ResultSetMetaData;
 import java.util.List;
 
 /**
@@ -11,7 +13,7 @@ import java.util.List;
  * @date 2022-12-03 22:45:22
  * @note 1.0
  */
-public interface ServiceColService {
+public interface ServiceColService extends IService<ServiceCol> {
 
 	/**
 	 * 根据 ID 查询一条数据
@@ -61,5 +63,9 @@ public interface ServiceColService {
 	 * @return 删除的行数
 	 */
 	public int deleteServiceColByIds(List<Integer> ids);
+
+	public boolean queryColumnInfoAndInsert(Integer serviceId, String selectSql);
+
+	public ResultSetMetaData executeSql(String sql);
 	
 }

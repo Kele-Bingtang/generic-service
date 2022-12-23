@@ -18,7 +18,7 @@ public class SqlUtils {
     private static GenericApiMapper genericApiMapper = ApplicationContextHelper.getBeanByClass(GenericApiMapper.class);
 
     /**
-     * @description: 传入查询 sql、实体类对象的 class，返回 list 实体类集合
+     * 传入查询 sql、实体类对象的 class，返回 list 实体类集合
      **/
     public static <T> List<T> getResult(String sql, Class<T> pojo) {
         // 非空校验
@@ -30,7 +30,7 @@ public class SqlUtils {
         // 获得 pojo 所有字段名
         Field[] fields = pojo.getDeclaredFields();
         // 查询数据库得到结果集
-        List<LinkedHashMap<String, Object>> linkedHashMapsList = genericApiMapper.commonSelect(sql);
+        List<HashMap<String, Object>> linkedHashMapsList = genericApiMapper.genericSelect(sql);
         if("java.util.Map".equals(pojo.getTypeName())) {
             return (List<T>) linkedHashMapsList;
         }
@@ -39,7 +39,7 @@ public class SqlUtils {
             if ("java.lang.String".equals(pojo.getTypeName())) {
                 T pojoObj = pojo.newInstance();
                 for (int i = 0; i < linkedHashMapsList.size(); i++) {
-                    LinkedHashMap<String, Object> stringObjectLinkedHashMap = linkedHashMapsList.get(i);
+                    HashMap<String, Object> stringObjectLinkedHashMap = linkedHashMapsList.get(i);
                     if ((null == stringObjectLinkedHashMap)) {
                         result.add(null);
                         continue;
@@ -54,7 +54,7 @@ public class SqlUtils {
                 return result;
             }
             // 遍历结果集
-            for (LinkedHashMap<String, Object> linkedHashMap : linkedHashMapsList) {
+            for (HashMap<String, Object> linkedHashMap : linkedHashMapsList) {
                 // 创建 pojo 对象
                 T pojoObj = pojo.newInstance();
                 // 将结果集取出来，并转换基本类型,再通过反射 set 到 pojo 中

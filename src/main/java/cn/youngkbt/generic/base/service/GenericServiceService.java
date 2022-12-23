@@ -16,8 +16,15 @@ public interface GenericServiceService {
 
 	/**
 	 * 根据 ID 查询一条数据
-	 * @param conditionVos 查询条件
+	 * @param serviceId ID
 	 * @return 根据 ID 查询出的实体对象
+	 */
+	public GenericService queryGenericServiceById(Integer serviceId);
+	
+	/**
+	 * 根据条件查询数据
+	 * @param conditionVos 查询条件
+	 * @return 根据条件查询数据
 	 */
 	public List<GenericService> queryGenericServiceByConditions(List<ConditionVo> conditionVos);
 	

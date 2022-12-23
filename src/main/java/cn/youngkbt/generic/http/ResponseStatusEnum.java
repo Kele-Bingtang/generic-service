@@ -19,7 +19,8 @@ public enum ResponseStatusEnum {
     USER_PASSWORD_EXPIRED(1008,"fail","账号过期"),
     USER_ACCOUNT_DISABLE(1009,"fail","账号禁用"),
     USER_ACCOUNT_LOCKED(1010,"fail","账号锁定"),
-    USER_ACCOUNT_NOT_EXIST(1011,"fail","账号不存在");
+    USER_ACCOUNT_NOT_EXIST(1011,"fail","账号不存在"),
+    SERVICE_SQL_EXCEPTION(1012,"error","该 SQL 无法执行，请检查 SQL 语法或者查看表是否存在");
 
     private Integer code;
 

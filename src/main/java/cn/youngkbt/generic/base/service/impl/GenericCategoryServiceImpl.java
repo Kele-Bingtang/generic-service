@@ -5,7 +5,7 @@ import cn.youngkbt.generic.base.model.GenericCategory;
 import cn.youngkbt.generic.base.model.GenericService;
 import cn.youngkbt.generic.base.service.GenericCategoryService;
 import cn.youngkbt.generic.base.service.GenericServiceService;
-import cn.youngkbt.generic.exception.ConditionSqlException;
+import cn.youngkbt.generic.exception.ExecuteSqlException;
 import cn.youngkbt.generic.utils.SearchUtils;
 import cn.youngkbt.generic.utils.SecurityUtils;
 import cn.youngkbt.generic.vo.ConditionVo;
@@ -13,7 +13,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +47,7 @@ public class GenericCategoryServiceImpl implements GenericCategoryService {
         try {
             return genericCategoryMapper.selectList(queryWrapper);
         } catch (Exception e) {
-            throw new ConditionSqlException();
+            throw new ExecuteSqlException();
         }
     }
 
@@ -90,7 +89,7 @@ public class GenericCategoryServiceImpl implements GenericCategoryService {
             redisTemplate.opsForValue().set(key, genericCategoryPage, 24, TimeUnit.HOURS);
             return genericCategoryPage;
         } catch (Exception e) {
-            throw new ConditionSqlException();
+            throw new ExecuteSqlException();
         }
     }
 
@@ -100,7 +99,7 @@ public class GenericCategoryServiceImpl implements GenericCategoryService {
         try {
             return genericCategoryMapper.selectPage(page, queryWrapper);
         } catch (Exception e) {
-            throw new ConditionSqlException();
+            throw new ExecuteSqlException();
         }
     }
 

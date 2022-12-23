@@ -1,7 +1,9 @@
 package cn.youngkbt.generic.base.service;
 
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Kele-Bingtang
@@ -10,5 +12,8 @@ import java.util.Map;
  */
 public interface GenericApiService {
     
-    public List<Map> queryServiceData(String projectUrl, String serviceUrl, String secretKey);
+    public List<HashMap<String, Object>> queryServiceData(String projectUrl, String serviceUrl, String secretKey);
+    
+    public List<HashMap<String, Object>> genericSelect(String sql);
+    
 }

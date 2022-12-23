@@ -43,4 +43,26 @@ public class StringUtils {
         return !isBlank(content);
     }
 
+    public static String columnToLowerCamelCase(String column) {
+        StringBuilder charUpper = new StringBuilder();
+        String[] splitName = column.toLowerCase().split("_");
+        charUpper.append(splitName[0]);
+        for (int i = 1; i < splitName.length; i++) {
+            if (null != splitName[i]) {
+                String s = firstCharToUpperCase(splitName[i]);
+                charUpper.append(s);
+            }
+        }
+        return charUpper.toString();
+    }
+    public static String firstCharToUpperCase(String fieldName) {
+        char[] chars = fieldName.toCharArray();
+        if (chars[0] >= 'a' && chars[0] <= 'z') {
+            chars[0] -= 32;
+            return String.valueOf(chars);
+        } else {
+            return fieldName;
+        }
+    }
+
 }

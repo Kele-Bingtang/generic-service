@@ -52,9 +52,9 @@ public class GenericService {
 	 */
 	private String serviceDesc;
 	/**
-	 * 接口的 SQL 语句
+	 * 接口的查询 SQL 语句
 	 */
-	private String serviceSql;
+	private String selectSql;
 	/**
 	 * 执行更新语句的表名
 	 */

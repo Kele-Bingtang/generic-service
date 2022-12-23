@@ -3,6 +3,7 @@ package cn.youngkbt.generic.exception;
 import cn.youngkbt.generic.http.HttpResult;
 import cn.youngkbt.generic.http.Response;
 import cn.youngkbt.generic.http.ResponseStatusEnum;
+import cn.youngkbt.generic.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindException;
@@ -72,9 +73,12 @@ public class GlobalExceptionHandler {
     /**
      * 自定义异常：ConditionVoSqlException
      */
-    @ExceptionHandler(ConditionSqlException.class)
-    public Response handleConditionSqlException(ConditionSqlException e) {
+    @ExceptionHandler(ExecuteSqlException.class)
+    public Response handleConditionSqlException(ExecuteSqlException e) {
         LOGGER.error("ConstraintViolationException：{}", e.getMessage());
+        if (StringUtils.isNotBlank(e.getStatus())) {
+            return HttpResult.processResult(null, e.getCode(), e.getStatus(), e.getMessage());
+        }
         return HttpResult.processResult(null, e.getCode(), "error", e.getMessage());
     }
 

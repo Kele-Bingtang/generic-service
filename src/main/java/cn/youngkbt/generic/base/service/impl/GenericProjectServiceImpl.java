@@ -8,7 +8,7 @@ import cn.youngkbt.generic.base.model.UserProject;
 import cn.youngkbt.generic.base.service.GenericCategoryService;
 import cn.youngkbt.generic.base.service.GenericProjectService;
 import cn.youngkbt.generic.base.service.GenericRoleService;
-import cn.youngkbt.generic.exception.ConditionSqlException;
+import cn.youngkbt.generic.exception.ExecuteSqlException;
 import cn.youngkbt.generic.utils.ObjectUtils;
 import cn.youngkbt.generic.utils.SearchUtils;
 import cn.youngkbt.generic.utils.SecureUtils;
@@ -54,7 +54,7 @@ public class GenericProjectServiceImpl implements GenericProjectService {
         try {
             return genericProjectMapper.selectList(queryWrapper);
         } catch (Exception e) {
-            throw new ConditionSqlException();
+            throw new ExecuteSqlException();
         }
     }
 
@@ -101,7 +101,7 @@ public class GenericProjectServiceImpl implements GenericProjectService {
             redisTemplate.opsForValue().set(key, projectPage, 24, TimeUnit.HOURS);
             return projectPage;
         } catch (Exception e) {
-            throw new ConditionSqlException();
+            throw new ExecuteSqlException();
         }
     }
 
@@ -111,7 +111,7 @@ public class GenericProjectServiceImpl implements GenericProjectService {
         try {
             return genericProjectMapper.selectPage(page, queryWrapper);
         } catch (Exception e) {
-            throw new ConditionSqlException();
+            throw new ExecuteSqlException();
         }
     }
 

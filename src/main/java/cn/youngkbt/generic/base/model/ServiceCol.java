@@ -44,6 +44,10 @@ public class ServiceCol {
 	 */
 	private String colType;
 	/**
+	 * 字段类型长度
+	 */
+	private Integer colLength;
+	/**
 	 * 增删改时，是否作为 where 条件，0 作为，1 不作为（不一定是主键）
 	 */
 	@IncludeValid(value = {"0", "1"}, message = "是否作为 where 条件，0 作为，1 不作为，请传入数字", groups = ServiceColUpdate.class)
@@ -108,7 +112,7 @@ public class ServiceCol {
 	@IncludeValid(value = {"0", "1", "2"}, message = "列对齐，0 为左对齐，1 为居中，2 为右对齐，请传入数字", groups = ServiceColUpdate.class)
 	private Integer colAlign;
 	/**
-	 * 创建表的用户 id
+	 * 创建表的用户
 	 */
 	@NotNull(message = "用户名不能为空", groups = ServiceColInsert.class)
 	@Null(message = "用户名不能修改", groups = ServiceColUpdate.class)
@@ -120,7 +124,7 @@ public class ServiceCol {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date createTime;
 	/**
-	 * 修改表的用户 id
+	 * 修改表的用户
 	 */
 	@NotNull(message = "修改的用户名不能为空", groups = {ServiceColInsert.class, ServiceColUpdate.class})
 	private String modifyUser;
