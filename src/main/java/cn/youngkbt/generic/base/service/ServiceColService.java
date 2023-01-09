@@ -3,6 +3,7 @@ package cn.youngkbt.generic.base.service;
 import cn.youngkbt.generic.base.model.ServiceCol;
 import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.sql.ResultSetMetaData;
@@ -27,6 +28,8 @@ public interface ServiceColService extends IService<ServiceCol> {
 	 * @return 所有数据的实体对象集合
 	 */
 	public List<ServiceCol> queryServiceColList(ServiceCol serviceCol);
+
+	public IPage<ServiceCol> queryServiceColListPage(IPage<ServiceCol> page, ServiceCol serviceCol);
 	
 	/**
 	 * 插入一条数据
@@ -67,5 +70,5 @@ public interface ServiceColService extends IService<ServiceCol> {
 	public boolean queryColumnInfoAndInsert(Integer serviceId, String selectSql);
 
 	public ResultSetMetaData executeSql(String sql);
-	
+
 }

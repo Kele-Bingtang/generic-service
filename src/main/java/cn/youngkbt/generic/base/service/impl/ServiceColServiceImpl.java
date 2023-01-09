@@ -10,6 +10,7 @@ import cn.youngkbt.generic.utils.SecurityUtils;
 import cn.youngkbt.generic.utils.StringUtils;
 import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -50,6 +51,19 @@ public class ServiceColServiceImpl extends ServiceImpl<ServiceColMapper, Service
         // 如果 genericCategory 没有数据，则返回全部数据
         queryWrapper.setEntity(serviceCol);
         return serviceColMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public IPage<ServiceCol> queryServiceColListPage(IPage<ServiceCol> page, ServiceCol serviceCol) {
+        QueryWrapper<ServiceCol> queryWrapper = new QueryWrapper<>();
+        // 如果 genericCategory 没有数据，则返回全部数据
+        queryWrapper.setEntity(serviceCol);
+        try {
+            IPage<ServiceCol> serviceColIPage = serviceColMapper.selectPage(page, queryWrapper);
+            return serviceColIPage;
+        } catch (Exception e) {
+            throw new ExecuteSqlException();
+        }
     }
 
     @Override

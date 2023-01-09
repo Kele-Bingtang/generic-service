@@ -68,7 +68,7 @@ public class ServiceCol {
 	/**
 	 * 排序，格式：x-x，前面表示 order by 的顺序，后者表示升序或者降序，只有 0(asc) 和 1(desc)。如：name 字段为 0-0，age 字段为 1-1，则表示 order by name asc, age desc
 	 */
-	private Integer orderBy;
+	private String orderBy;
 	/**
 	 * 是否允许插入，0 允许，1 不允许
 	 */
@@ -138,6 +138,7 @@ public class ServiceCol {
 	 * 接口的 id
 	 */
 	@NotNull(message = "接口 id 不能为空", groups = ServiceColInsert.class)
+	@NotNull(message = "接口 id 不能为空")
 	private Integer	serviceId;
 
 	public interface ServiceColInsert {

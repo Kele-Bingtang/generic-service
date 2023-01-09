@@ -9,6 +9,8 @@ import cn.youngkbt.generic.http.Response;
 import cn.youngkbt.generic.utils.ObjectUtils;
 import cn.youngkbt.generic.valid.ValidList;
 import cn.youngkbt.generic.vo.ConditionVo;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,9 +40,16 @@ public class ServiceColController {
 	}
 
 	@GetMapping("/queryServiceColList")
-	public Response queryServiceColList(ServiceCol serviceCol) {
+	public Response queryServiceColList(@Validated ServiceCol serviceCol) {
 		List<ServiceCol> colList = serviceColService.queryServiceColList(serviceCol);
 		return HttpResult.ok(colList);
+	}
+
+	@GetMapping("/queryServiceColListPages")
+	public Response queryServiceColListPages(@Validated ServiceCol serviceCol, @RequestParam(defaultValue = "1", required = false) Integer pageNo, @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
+		IPage<ServiceCol> page = new Page<>(pageNo, pageSize);
+		IPage<ServiceCol> colList = serviceColService.queryServiceColListPage(page, serviceCol);
+		return HttpResult.ok(colList.getRecords());
 	}
 
 	@PostMapping("/insertServiceCol")
@@ -67,8 +76,7 @@ public class ServiceColController {
 		if(ObjectUtils.isEmpty(genericService) || ObjectUtils.isEmpty(genericService.getId())) {
 			return HttpResult.fail("接口信息不存在");
 		}
-		serviceColService.queryColumnInfoAndInsert(serviceId, genericService.getSelectSql());
-		boolean isSuccess = true;
+		boolean isSuccess = serviceColService.queryColumnInfoAndInsert(serviceId, genericService.getSelectSql());
 		if(isSuccess) {
 			return HttpResult.ok("更新成功");
 		}else {
