@@ -72,4 +72,8 @@ public class GenericServiceVo {
 	 */
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date modifyTime;
+	/**
+	 * 报表名称
+	 */
+	private String reportTitle;
 }

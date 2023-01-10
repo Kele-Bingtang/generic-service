@@ -101,6 +101,11 @@ public class GenericService {
 	@NotNull(message = "目录 id 不能为空", groups = ServiceInsert.class)
 	private Integer categoryId;
 
+	/**
+	 * 报表名称
+	 */
+	private String reportTitle;
+
 	public interface ServiceInsert {
 	}
 

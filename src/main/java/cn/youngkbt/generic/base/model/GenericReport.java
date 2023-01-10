@@ -100,6 +100,7 @@ public class GenericReport {
      * 接口的 id
      */
     @NotNull(message = "接口 id 不能为空", groups = ReportInsert.class)
+    @NotNull(message = "接口 id 不能为空")
     private Integer serviceId;
 
     public interface ReportInsert {

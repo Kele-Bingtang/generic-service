@@ -27,6 +27,8 @@ public interface GenericReportService {
 	 */
 	public List<GenericReport> queryGenericReportList(GenericReport genericReport);
 
+	public GenericReport queryOneGenericReport(GenericReport genericReport);
+
 	/**
 	 * 查询分页数据
 	 * @param page 分页信息
@@ -68,5 +70,5 @@ public interface GenericReportService {
 	 * @return 删除的行数
 	 */
 	public int deleteGenericReportByIds(List<Integer> ids);
-
+	
 }

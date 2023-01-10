@@ -35,6 +35,11 @@ public class GenericReportController {
 		List<GenericReport> reportList = genericReportService.queryGenericReportList(genericReport);
 		return HttpResult.ok(reportList);
 	}
+	@GetMapping("/queryOneGenericReport")
+	public Response queryOneGenericReport(@Validated GenericReport genericReport) {
+		GenericReport report = genericReportService.queryOneGenericReport(genericReport);
+		return HttpResult.ok(report);
+	}
 
 	// @PostMapping("/insertGenericReport")
 	// public Response insertGenericReport(@RequestBody GenericReport genericReport) {

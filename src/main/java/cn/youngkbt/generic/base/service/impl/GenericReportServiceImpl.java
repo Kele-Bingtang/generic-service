@@ -29,7 +29,6 @@ public class GenericReportServiceImpl implements GenericReportService {
 	@Override
 	public List<GenericReport> queryGenericReportByCondition(List<ConditionVo> conditionVos) {
 		QueryWrapper<GenericReport> queryWrapper = SearchUtils.parseWhereSql(conditionVos, GenericReport.class);
-		
 		return genericReportMapper.selectList(queryWrapper);
 	}
 
@@ -39,6 +38,13 @@ public class GenericReportServiceImpl implements GenericReportService {
 		// 如果 genericCategory 没有数据，则返回全部数据
 		queryWrapper.setEntity(genericReport);
 		return genericReportMapper.selectList(queryWrapper);
+	}
+	
+	@Override
+	public GenericReport queryOneGenericReport(GenericReport genericReport) {
+		QueryWrapper<GenericReport> queryWrapper = new QueryWrapper<>();
+		queryWrapper.setEntity(genericReport);
+		return genericReportMapper.selectOne(queryWrapper);
 	}
 
 	@Override

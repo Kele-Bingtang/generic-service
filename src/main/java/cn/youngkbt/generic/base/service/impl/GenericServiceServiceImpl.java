@@ -119,7 +119,15 @@ public class GenericServiceServiceImpl implements GenericServiceService {
             // 执行一次 sql，进行验证
             serviceColService.executeSql(selectSql);
         }
+        genericService.setReportTitle(genericService.getServiceName());
         int i = genericServiceMapper.insert(genericService);
+        GenericReport genericReport = new GenericReport();
+        genericReport.setReportTitle(genericService.getServiceName());
+        genericReport.setDescription(genericService.getServiceName());
+        genericReport.setCreateUser(genericService.getCreateUser());
+        genericReport.setModifyUser(genericService.getCreateUser());
+        genericReport.setServiceId(genericService.getId());
+        genericReportService.insertGenericReport(genericReport);
         serviceColService.queryColumnInfoAndInsert(genericService.getId(), selectSql);
         if (i == 0) {
             return null;

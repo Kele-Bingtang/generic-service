@@ -113,7 +113,7 @@ public class ServiceColServiceImpl extends ServiceImpl<ServiceColMapper, Service
             for (int i = 1; i <= metaData.getColumnCount(); i++) {
                 ServiceCol serviceCol = new ServiceCol();
                 serviceCol.setTableCol(metaData.getColumnName(i));
-                serviceCol.setColType(metaData.getColumnTypeName(i));
+                serviceCol.setColType(metaData.getColumnTypeName(i).toLowerCase());
                 serviceCol.setColLength(metaData.getPrecision(i));
                 // 转为小驼峰
                 String lowerCamelCase = StringUtils.columnToLowerCamelCase(metaData.getColumnName(i));
