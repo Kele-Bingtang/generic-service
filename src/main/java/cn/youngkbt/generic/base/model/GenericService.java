@@ -24,6 +24,7 @@ public class GenericService {
 	@Null(message = "新增时 id 必须为空", groups = ServiceInsert.class)
 	@NotNull(message = "更新时 id 不允许为空", groups = ServiceUpdate.class)
 	@NotNull(message = "删除时 id 不允许为空", groups = ServiceDelete.class)
+	@NotNull(message = "id 不允许为空")
 	private Integer id;
 	/**
 	 * 接口名

@@ -27,6 +27,8 @@ public interface GenericServiceService {
 	 * @return 根据条件查询数据
 	 */
 	public List<GenericService> queryGenericServiceByConditions(List<ConditionVo> conditionVos);
+
+	public GenericService queryOneGenericService(GenericService genericService);
 	
 	/**
 	 * 查询所有数据
@@ -46,8 +48,6 @@ public interface GenericServiceService {
 	 * @return 所有数据的实体对象集合
 	 */
 	public IPage<GenericService> queryGenericServiceConditionsPages(IPage<GenericService> page, List<ConditionVo> conditionVos);
-	
-	
 
 	/**
 	 * 插入一条数据

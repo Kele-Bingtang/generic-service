@@ -47,6 +47,7 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter {
                 // 首页和登录页面放行
                 .antMatchers("/").permitAll()
                 .antMatchers("/login").permitAll()
+                .antMatchers("/generic-api/**").permitAll()
                 // 其他所有请求需要身份认证
                 .anyRequest().authenticated()
                 .and().headers().frameOptions().disable()

@@ -24,14 +24,16 @@ public class GenericApiController {
     private GenericApiService genericApiService;
 
     @GetMapping(value = "/{projectUrl}/**")
-    public Response queryGenericApi(@PathVariable("projectUrl") String projectUrl, @RequestURI String requestUri, @RequestHeader("Authorization") String secretKey) {
+    public Response queryGenericApi(@PathVariable("projectUrl") String projectUrl, @RequestURI String requestUri, 
+                                    @RequestHeader("generic_secret_key") String secretKey, @RequestParam("_from") String from) {
         Assert.notNull(secretKey, "无效参数");
         // 拿出 service 的 uri
         String baseApi = "/generic-api";
         String temp = baseApi + projectUrl;
+        // 如 /generic-api/project/service，则 project 是项目地址（projectUrl），service 是接口地址（requestUri）
         String serviceUrl = requestUri.substring(temp.length() + 1);
-        List<HashMap<String, Object>> list = genericApiService.queryServiceData("/" + projectUrl, serviceUrl, secretKey);
+        List<HashMap<String, Object>> list = genericApiService.queryServiceData("/" + projectUrl, serviceUrl, secretKey, from);
         return HttpResult.ok(list);
     }
-    
+
 }

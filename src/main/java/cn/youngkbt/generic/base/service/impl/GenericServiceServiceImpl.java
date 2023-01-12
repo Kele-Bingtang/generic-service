@@ -60,6 +60,13 @@ public class GenericServiceServiceImpl implements GenericServiceService {
     }
 
     @Override
+    public GenericService queryOneGenericService(GenericService genericService) {
+        QueryWrapper<GenericService> queryWrapper = new QueryWrapper<>();
+        queryWrapper.setEntity(genericService);
+        return genericServiceMapper.selectOne(queryWrapper);
+    }
+
+    @Override
     public List<GenericService> queryGenericServiceList(GenericService genericService) {
         String key = SecurityUtils.getUsername() + "_service_" + genericService.toString();
         // 从 Redis 拿缓存

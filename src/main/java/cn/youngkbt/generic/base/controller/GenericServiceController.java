@@ -35,6 +35,12 @@ public class GenericServiceController {
         return HttpResult.ok(service);
     }
 
+    @GetMapping("/queryOneGenericService")
+    public Response queryOneGenericService(@Validated GenericService genericService) {
+        GenericService service = genericServiceService.queryOneGenericService(genericService);
+        return HttpResult.ok(service);
+    }
+
     @GetMapping("/queryGenericServiceList")
     public Response queryGenericServiceList(GenericService genericService) {
         List<GenericService> serviceList = genericServiceService.queryGenericServiceList(genericService);
