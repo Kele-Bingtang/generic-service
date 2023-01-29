@@ -32,7 +32,7 @@ public class GenericServiceVo {
 	/**
 	 * 接口状态，0 启用，1 禁用
 	 */
-	@Convert(source = {0, 1 }, target = {"启用", "禁用"})
+	@Convert(source = {0, 1}, target = {"启用", "禁用"})
 	private String status;
 	/**
 	 * 接口描述
@@ -42,6 +42,10 @@ public class GenericServiceVo {
 	 * 接口的 SQL 语句
 	 */
 	private String selectSql;
+	/**
+	 * 执行查询语句的表名
+	 */
+	private String selectTable;
 	/**
 	 * 执行更新语句的表名
 	 */

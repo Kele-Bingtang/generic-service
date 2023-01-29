@@ -7,25 +7,26 @@ import cn.youngkbt.generic.http.ResponseStatusEnum;
  * @date 2022/12/7 22:41
  * @note
  */
-public class ExecuteSqlException extends RuntimeException {
+public class GenericException extends RuntimeException {
     private Integer code;
     private String status;
     private String message;
 
-    public ExecuteSqlException() {
-        this.code = ResponseStatusEnum.CONDITION_SQL_ERROR.getCode();
-        this.message = ResponseStatusEnum.CONDITION_SQL_ERROR.getMessage();
-    }
-
-    public ExecuteSqlException(Integer code, String message) {
+    public GenericException(Integer code, String message) {
         this.code = code;
         this.message = message;
     }
     
-    public ExecuteSqlException(Integer code, String status, String message) {
+    public GenericException(Integer code, String status, String message) {
         this.code = code;
         this.status = status;
         this.message = message;
+    }
+
+    public GenericException(ResponseStatusEnum responseStatusEnum) {
+        this.code = responseStatusEnum.getCode();
+        this.status = responseStatusEnum.getStatus();
+        this.message = responseStatusEnum.getMessage();
     }
 
     public Integer getCode() {

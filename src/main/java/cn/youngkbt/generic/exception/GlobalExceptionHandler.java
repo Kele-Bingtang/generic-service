@@ -73,8 +73,8 @@ public class GlobalExceptionHandler {
     /**
      * 自定义异常：ConditionVoSqlException
      */
-    @ExceptionHandler(ExecuteSqlException.class)
-    public Response handleConditionSqlException(ExecuteSqlException e) {
+    @ExceptionHandler(GenericException.class)
+    public Response handleConditionSqlException(GenericException e) {
         LOGGER.error("ConstraintViolationException：{}", e.getMessage());
         if (StringUtils.isNotBlank(e.getStatus())) {
             return HttpResult.processResult(null, e.getCode(), e.getStatus(), e.getMessage());

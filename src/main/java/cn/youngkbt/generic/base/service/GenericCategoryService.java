@@ -1,7 +1,7 @@
 package cn.youngkbt.generic.base.service;
 
 import cn.youngkbt.generic.base.model.GenericCategory;
-import cn.youngkbt.generic.exception.ExecuteSqlException;
+import cn.youngkbt.generic.exception.GenericException;
 import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -20,7 +20,7 @@ public interface GenericCategoryService {
 	 * @param conditionVos 查询条件
 	 * @return 根据 ID 查询出的实体对象
 	 */
-	public List<GenericCategory> queryGenericCategoryByCondition(List<ConditionVo> conditionVos) throws ExecuteSqlException;
+	public List<GenericCategory> queryGenericCategoryByCondition(List<ConditionVo> conditionVos) throws GenericException;
 	
 	/**
 	 * 查询所有数据

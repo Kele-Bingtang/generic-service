@@ -5,7 +5,8 @@ import cn.youngkbt.generic.base.model.GenericCategory;
 import cn.youngkbt.generic.base.model.GenericService;
 import cn.youngkbt.generic.base.service.GenericCategoryService;
 import cn.youngkbt.generic.base.service.GenericServiceService;
-import cn.youngkbt.generic.exception.ExecuteSqlException;
+import cn.youngkbt.generic.exception.GenericException;
+import cn.youngkbt.generic.http.ResponseStatusEnum;
 import cn.youngkbt.generic.utils.SearchUtils;
 import cn.youngkbt.generic.utils.SecurityUtils;
 import cn.youngkbt.generic.vo.ConditionVo;
@@ -47,7 +48,7 @@ public class GenericCategoryServiceImpl implements GenericCategoryService {
         try {
             return genericCategoryMapper.selectList(queryWrapper);
         } catch (Exception e) {
-            throw new ExecuteSqlException();
+            throw new GenericException(ResponseStatusEnum.CONDITION_SQL_ERROR);
         }
     }
 
@@ -89,7 +90,7 @@ public class GenericCategoryServiceImpl implements GenericCategoryService {
             redisTemplate.opsForValue().set(key, genericCategoryPage, 24, TimeUnit.HOURS);
             return genericCategoryPage;
         } catch (Exception e) {
-            throw new ExecuteSqlException();
+            throw new GenericException(ResponseStatusEnum.CONDITION_SQL_ERROR);
         }
     }
 
@@ -99,7 +100,7 @@ public class GenericCategoryServiceImpl implements GenericCategoryService {
         try {
             return genericCategoryMapper.selectPage(page, queryWrapper);
         } catch (Exception e) {
-            throw new ExecuteSqlException();
+            throw new GenericException(ResponseStatusEnum.CONDITION_SQL_ERROR);
         }
     }
 

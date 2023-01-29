@@ -84,4 +84,5 @@ public interface GenericServiceService {
 	 */
 	public int deleteGenericServiceByIds(List<Integer> ids);
 
+    public List<String> genericServiceService(String databaseName);
 }

@@ -3,7 +3,7 @@ package cn.youngkbt.generic.base.service.impl;
 import cn.youngkbt.generic.base.mapper.ServiceColMapper;
 import cn.youngkbt.generic.base.model.ServiceCol;
 import cn.youngkbt.generic.base.service.ServiceColService;
-import cn.youngkbt.generic.exception.ExecuteSqlException;
+import cn.youngkbt.generic.exception.GenericException;
 import cn.youngkbt.generic.http.ResponseStatusEnum;
 import cn.youngkbt.generic.utils.SearchUtils;
 import cn.youngkbt.generic.utils.SecurityUtils;
@@ -49,7 +49,8 @@ public class ServiceColServiceImpl extends ServiceImpl<ServiceColMapper, Service
     public List<ServiceCol> queryServiceColList(ServiceCol serviceCol) {
         QueryWrapper<ServiceCol> queryWrapper = new QueryWrapper<>();
         // 如果 genericCategory 没有数据，则返回全部数据
-        queryWrapper.setEntity(serviceCol);
+        // 根据 display_seq 升序
+        queryWrapper.setEntity(serviceCol).orderByAsc("display_seq");
         return serviceColMapper.selectList(queryWrapper);
     }
 
@@ -62,7 +63,7 @@ public class ServiceColServiceImpl extends ServiceImpl<ServiceColMapper, Service
             IPage<ServiceCol> serviceColIPage = serviceColMapper.selectPage(page, queryWrapper);
             return serviceColIPage;
         } catch (Exception e) {
-            throw new ExecuteSqlException();
+            throw new GenericException(ResponseStatusEnum.CONDITION_SQL_ERROR);
         }
     }
 
@@ -126,7 +127,7 @@ public class ServiceColServiceImpl extends ServiceImpl<ServiceColMapper, Service
             }
             return this.saveBatch(serviceColList);
         } catch (SQLException e) {
-            throw new ExecuteSqlException(ResponseStatusEnum.SERVICE_SQL_EXCEPTION.getCode(), ResponseStatusEnum.SERVICE_SQL_EXCEPTION.getMessage());
+            throw new GenericException(ResponseStatusEnum.SERVICE_SQL_EXCEPTION.getCode(), ResponseStatusEnum.SERVICE_SQL_EXCEPTION.getMessage());
         }
     }
 
@@ -142,7 +143,7 @@ public class ServiceColServiceImpl extends ServiceImpl<ServiceColMapper, Service
             resultSet = statement.executeQuery(selectSql);
             metaData = resultSet.getMetaData();
         } catch (SQLException e) {
-            throw new ExecuteSqlException(ResponseStatusEnum.SERVICE_SQL_EXCEPTION.getCode(), ResponseStatusEnum.SERVICE_SQL_EXCEPTION.getMessage());
+            throw new GenericException(ResponseStatusEnum.SERVICE_SQL_EXCEPTION.getCode(), ResponseStatusEnum.SERVICE_SQL_EXCEPTION.getMessage());
         } finally {
             if (null != sqlSession) {
                 closeNativeSqlSession(sqlSession);

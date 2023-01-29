@@ -9,7 +9,8 @@ import cn.youngkbt.generic.base.service.GenericProjectService;
 import cn.youngkbt.generic.base.service.GenericRoleService;
 import cn.youngkbt.generic.base.service.GenericUserService;
 import cn.youngkbt.generic.base.service.UserProjectService;
-import cn.youngkbt.generic.exception.ExecuteSqlException;
+import cn.youngkbt.generic.exception.GenericException;
+import cn.youngkbt.generic.http.ResponseStatusEnum;
 import cn.youngkbt.generic.utils.ObjectUtils;
 import cn.youngkbt.generic.utils.SearchUtils;
 import cn.youngkbt.generic.utils.SecurityUtils;
@@ -50,7 +51,7 @@ public class GenericUserServiceImpl implements GenericUserService {
         try {
             return genericUserMapper.selectList(queryWrapper);
         } catch (Exception e) {
-            throw new ExecuteSqlException();
+            throw new GenericException(ResponseStatusEnum.CONDITION_SQL_ERROR);
         }
     }
 
@@ -67,7 +68,7 @@ public class GenericUserServiceImpl implements GenericUserService {
         try {
             return genericUserMapper.selectPage(page, queryWrapper);
         } catch (Exception e) {
-            throw new ExecuteSqlException();
+            throw new GenericException(ResponseStatusEnum.CONDITION_SQL_ERROR);
         }
     }
 
@@ -90,7 +91,7 @@ public class GenericUserServiceImpl implements GenericUserService {
         try {
             return genericUserMapper.selectPage(page, queryWrapper);
         } catch (Exception e) {
-            throw new ExecuteSqlException();
+            throw new GenericException(ResponseStatusEnum.CONDITION_SQL_ERROR);
         }
     }
 

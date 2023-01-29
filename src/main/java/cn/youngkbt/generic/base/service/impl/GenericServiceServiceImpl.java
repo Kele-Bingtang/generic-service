@@ -1,5 +1,6 @@
 package cn.youngkbt.generic.base.service.impl;
 
+import cn.youngkbt.generic.base.mapper.GenericApiMapper;
 import cn.youngkbt.generic.base.mapper.GenericServiceMapper;
 import cn.youngkbt.generic.base.model.GenericReport;
 import cn.youngkbt.generic.base.model.GenericService;
@@ -7,7 +8,8 @@ import cn.youngkbt.generic.base.model.ServiceCol;
 import cn.youngkbt.generic.base.service.GenericReportService;
 import cn.youngkbt.generic.base.service.GenericServiceService;
 import cn.youngkbt.generic.base.service.ServiceColService;
-import cn.youngkbt.generic.exception.ExecuteSqlException;
+import cn.youngkbt.generic.exception.GenericException;
+import cn.youngkbt.generic.http.ResponseStatusEnum;
 import cn.youngkbt.generic.utils.SearchUtils;
 import cn.youngkbt.generic.utils.SecurityUtils;
 import cn.youngkbt.generic.utils.StringUtils;
@@ -42,6 +44,8 @@ public class GenericServiceServiceImpl implements GenericServiceService {
     @Resource
     private ServiceColService serviceColService;
     @Resource
+    private GenericApiMapper genericApiMapper;
+    @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
     @Override
@@ -55,7 +59,7 @@ public class GenericServiceServiceImpl implements GenericServiceService {
         try {
             return genericServiceMapper.selectList(queryWrapper);
         } catch (Exception e) {
-            throw new ExecuteSqlException();
+            throw new GenericException(ResponseStatusEnum.CONDITION_SQL_ERROR);
         }
     }
 
@@ -104,7 +108,7 @@ public class GenericServiceServiceImpl implements GenericServiceService {
             redisTemplate.opsForValue().set(key, servicePage, 24, TimeUnit.HOURS);
             return servicePage;
         } catch (Exception e) {
-            throw new ExecuteSqlException();
+            throw new GenericException(ResponseStatusEnum.CONDITION_SQL_ERROR);
         }
     }
 
@@ -114,7 +118,7 @@ public class GenericServiceServiceImpl implements GenericServiceService {
         try {
             return genericServiceMapper.selectPage(page, queryWrapper);
         } catch (Exception e) {
-            throw new ExecuteSqlException();
+            throw new GenericException(ResponseStatusEnum.CONDITION_SQL_ERROR);
         }
     }
 
@@ -196,6 +200,13 @@ public class GenericServiceServiceImpl implements GenericServiceService {
             this.deleteCachedKeys();
         }
         return i;
+    }
+
+    @Override
+    public List<String> genericServiceService(String databaseName) {
+        // MySQL 
+        String sql = "SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = '" + databaseName + "'";
+        return genericApiMapper.genericSelectTable(sql);
     }
 
     @Override

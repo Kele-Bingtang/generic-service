@@ -30,7 +30,7 @@ public class SqlUtils {
         // 获得 pojo 所有字段名
         Field[] fields = pojo.getDeclaredFields();
         // 查询数据库得到结果集
-        List<HashMap<String, Object>> linkedHashMapsList = genericApiMapper.genericSelect(sql);
+        List<LinkedHashMap<String, Object>> linkedHashMapsList = genericApiMapper.genericSelect(sql);
         if("java.util.Map".equals(pojo.getTypeName())) {
             return (List<T>) linkedHashMapsList;
         }

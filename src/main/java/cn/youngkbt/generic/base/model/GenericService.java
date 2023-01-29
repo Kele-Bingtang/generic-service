@@ -44,7 +44,7 @@ public class GenericService {
 	@NotNull(message = "接口完整地址不能为空", groups = {ServiceInsert.class, ServiceUpdate.class})
 	private String fullUrl;
 	/**
-	 * 接口状态，0 启用，1 禁用
+	 * 接口状态，0 禁用，1 启用
 	 */
 	@IncludeValid(value = {"0", "1"}, message = "接口状态不能为空", groups = ServiceInsert.class)
 	private Integer status;
@@ -56,6 +56,10 @@ public class GenericService {
 	 * 接口的查询 SQL 语句
 	 */
 	private String selectSql;
+	/**
+	 * 执行查询语句的表名
+	 */
+	private String selectTable;
 	/**
 	 * 执行更新语句的表名
 	 */

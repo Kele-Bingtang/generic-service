@@ -38,29 +38,29 @@ public class GenericReport {
      */
     private String description;
     /**
-     * 是否允许编辑，0 允许，1 不允许
+     * 是否允许编辑，0 不允许，1 允许
      */
-    @IncludeValid(value = {"0", "1"}, message = " allowEdit 只有 0 允许，1 不允许", groups = {ReportInsert.class, ReportUpdate.class})
+    @IncludeValid(value = {"0", "1"}, message = " allowEdit 只有 0 不允许，1 允许", groups = {ReportInsert.class, ReportUpdate.class})
     private Integer allowEdit;
     /**
-     * 是否允许新增，0 允许，1 不允许
+     * 是否允许新增，0 不允许，1 允许
      */
-    @IncludeValid(value = {"0", "1"}, message = " allowAdd 只有 0 允许，1 不允许", groups = {ReportInsert.class, ReportUpdate.class})
+    @IncludeValid(value = {"0", "1"}, message = " allowAdd 只有 0 不允许，1 允许", groups = {ReportInsert.class, ReportUpdate.class})
     private Integer allowAdd;
     /**
-     * 是否允许删除，0 允许，1 不允许
+     * 是否允许删除，0 不允许，1 允许
      */
-    @IncludeValid(value = {"0", "1"}, message = " allowDelete 只有 0 允许，1 不允许", groups = {ReportInsert.class, ReportUpdate.class})
+    @IncludeValid(value = {"0", "1"}, message = " allowDelete 只有 0 不允许，1 允许", groups = {ReportInsert.class, ReportUpdate.class})
     private Integer allowDelete;
     /**
-     * 是否允许查询，0 允许，1 不允许
+     * 是否允许查询，0 不允许，1 允许
      */
-    @IncludeValid(value = {"0", "1"}, message = " allowFilter 只有 0 允许，1 不允许", groups = {ReportInsert.class, ReportUpdate.class})
+    @IncludeValid(value = {"0", "1"}, message = " allowFilter 只有 0 不允许，1 允许", groups = {ReportInsert.class, ReportUpdate.class})
     private Integer allowFilter;
     /**
-     * 是否允许导出，0 允许，1 不允许
+     * 是否允许导出，0 不允许，1 允许
      */
-    @IncludeValid(value = {"0", "1"}, message = " allowExport 只有 0 允许，1 不允许", groups = {ReportInsert.class, ReportUpdate.class})
+    @IncludeValid(value = {"0", "1"}, message = " allowExport 只有 0 不允许，1 允许", groups = {ReportInsert.class, ReportUpdate.class})
     private Integer allowExport;
     /**
      * 一页显示多少条数据

@@ -101,9 +101,9 @@ public class GenericUserController {
             map.put("username", user.getUsername());
             map.put("email", user.getEmail());
             if (user.getStatus() == 0) {
-                map.put("status","在线");
-            } else if (user.getStatus() == 1) {
                 map.put("status","离线");
+            } else if (user.getStatus() == 1) {
+                map.put("status","在线");
             }
             userListMap.add(map);
         });
@@ -170,9 +170,9 @@ public class GenericUserController {
     public void convertModelToVo(GenericUser user, GenericUserVo userVo) {
         BeanUtils.copyProperties(user, userVo);
         if (user.getStatus() == 0) {
-            userVo.setStatus("在线");
-        } else if (user.getStatus() == 1) {
             userVo.setStatus("离线");
+        } else if (user.getStatus() == 1) {
+            userVo.setStatus("在线");
         }
         if (user.getGender() == 0) {
             userVo.setGender("保密");

@@ -57,9 +57,9 @@ public class GenericServiceController {
             GenericServiceVo serviceVo = new GenericServiceVo();
             BeanUtils.copyProperties(item, serviceVo);
             if (item.getStatus() == 0) {
-                serviceVo.setStatus("启用");
-            } else if (item.getStatus() == 1) {
                 serviceVo.setStatus("禁用");
+            } else if (item.getStatus() == 1) {
+                serviceVo.setStatus("启用");
             }
             serviceVoList.add(serviceVo);
         });
@@ -89,6 +89,12 @@ public class GenericServiceController {
     public Response deleteGenericServiceById(@Validated(GenericService.ServiceDelete.class) @RequestBody GenericService genericService) {
         GenericService service = genericServiceService.deleteGenericServiceById(genericService);
         return HttpResult.okOrFail(service);
+    }
+    
+    @GetMapping("/queryTableNameByDatabaseName/{databaseName}")
+    public Response queryTableNameByDatabaseName(@PathVariable("databaseName") String databaseName) {
+        List<String> tableNameList = genericServiceService.genericServiceService(databaseName);
+        return HttpResult.okOrFail(tableNameList);
     }
 
 }

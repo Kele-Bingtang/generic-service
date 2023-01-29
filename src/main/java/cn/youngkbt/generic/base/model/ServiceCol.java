@@ -48,18 +48,18 @@ public class ServiceCol {
 	 */
 	private Integer colLength;
 	/**
-	 * 增删改时，是否作为 where 条件，0 作为，1 不作为（不一定是主键）
+	 * 增删改时，是否作为 where 条件，0 不作为，1 作为（不一定是主键）
 	 */
-	@IncludeValid(value = {"0", "1"}, message = "是否作为 where 条件，0 作为，1 不作为，请传入数字", groups = ServiceColUpdate.class)
+	@IncludeValid(value = {"0", "1"}, message = "是否作为 where 条件，0 不作为，1 作为，请传入数字", groups = ServiceColUpdate.class)
 	private Integer isWhereKey;
 	/**
 	 * 字段默认值
 	 */
 	private String defaultValue;
 	/**
-	 * 数据是否加密，0 加密，1 不加密
+	 * 数据是否加密，0 不加密，1 加密
 	 */
-	@IncludeValid(value = {"0", "1"}, message = "数据是否加密，0 加密，1 不加密，请传入数字", groups = ServiceColUpdate.class)
+	@IncludeValid(value = {"0", "1"}, message = "数据是否加密，0 不加密，1 加密，请传入数字", groups = ServiceColUpdate.class)
 	private Integer dataEncrypt;
 	/**
 	 * select 时的筛选，如 where 字段 = xx、like %xx%。0 为不筛选，1 为 = 精准匹配，2 为 like %xx，3 为 like xx%，4 为 like %xx%，5 为 like xx。如果为 5，你可以变成 2、3、4，即 xx 可以加 % 或者 _ 或者 []，只要符合 like 的要求即可。
@@ -70,29 +70,29 @@ public class ServiceCol {
 	 */
 	private String orderBy;
 	/**
-	 * 是否允许插入，0 允许，1 不允许
+	 * 是否允许插入，0 不允许，1 允许
 	 */
-	@IncludeValid(value = {"0", "1"}, message = "是否允许插入，0 允许，1 不允许，请传入数字", groups = ServiceColUpdate.class)
+	@IncludeValid(value = {"0", "1"}, message = "是否允许插入，0 不允许，1 允许，请传入数字", groups = ServiceColUpdate.class)
 	private Integer allowInsert;
 	/**
-	 * 是否允许更新，0 允许，1 不允许
+	 * 是否允许更新，0 不允许，1 允许
 	 */
-	@IncludeValid(value = {"0", "1"}, message = "是否允许更新，0 允许，1 不允许，请传入数字", groups = ServiceColUpdate.class)
+	@IncludeValid(value = {"0", "1"}, message = "是否允许更新，0 不允许，1 允许，请传入数字", groups = ServiceColUpdate.class)
 	private Integer allowUpdate;
 	/**
-	 * 是否允许查询，0 允许，1 不允许
+	 * 是否允许查询，0 不允许，1 允许
 	 */
-	@IncludeValid(value = {"0", "1"}, message = "是否允许查询，0 允许，1 不允许，请传入数字", groups = ServiceColUpdate.class)
+	@IncludeValid(value = {"0", "1"}, message = "是否允许查询，0 不允许，1 允许，请传入数字", groups = ServiceColUpdate.class)
 	private Integer allowFilter;
 	/**
-	 * 是否允许出现在报表，0 允许，1 不允许
+	 * 是否允许出现在报表，0 不允许，1 允许
 	 */
-	@IncludeValid(value = {"0", "1"}, message = "是否允许出现在报表，0 允许，1 不允许，请传入数字", groups = ServiceColUpdate.class)
+	@IncludeValid(value = {"0", "1"}, message = "是否允许出现在报表，0 不允许，1 允许，请传入数字", groups = ServiceColUpdate.class)
 	private Integer allowShowInReport;
 	/**
-	 * 是否允许出现在报表的增删改弹出框，0 允许，1 不允许
+	 * 是否允许出现在报表的增删改弹出框，0 不允许，1 允许
 	 */
-	@IncludeValid(value = {"0", "1"}, message = "是否允许出现在报表的增删改弹出框，0 允许，1 不允许，请传入数字", groups = ServiceColUpdate.class)
+	@IncludeValid(value = {"0", "1"}, message = "是否允许出现在报表的增删改弹出框，0 不允许，1 允许，请传入数字", groups = ServiceColUpdate.class)
 	private Integer allowShowInDetail;
 	/**
 	 * 报表字段出现的顺序

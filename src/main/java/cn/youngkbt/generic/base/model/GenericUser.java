@@ -62,9 +62,9 @@ public class GenericUser {
 	 */
 	private String phone;
 	/**
-	 * 状态，0 在线，1 离线
+	 * 状态，0 离线，1 在线
 	 */
-	@IncludeValid(value = {"0", "1"}, message = "状态 0 在线，1 离线，请传入数字", groups = UserUpdate.class)
+	@IncludeValid(value = {"0", "1"}, message = "状态 0 离线，1 在线，请传入数字", groups = UserUpdate.class)
 	private Integer status;
 	/**
 	 * 注册时间
