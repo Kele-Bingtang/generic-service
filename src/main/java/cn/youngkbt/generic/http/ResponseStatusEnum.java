@@ -13,15 +13,17 @@ public enum ResponseStatusEnum {
     CONDITION_SQL_ERROR(1002, "error", "字段不存在"),
     LOGIN_FAIL(1003, "fail", "登录失败"),
     USER_REGISTER_FAILED(1004, "fail", "注册失败"),
-    USER_ACCOUNT_EXISTED(1005,"fail", "用户名已存在"),
-    USER_ACCOUNT_EXPIRED(1006,"fail","账号过期"),
-    USERNAME_PASSWORD_ERROR(1007,"fail","用户名或密码错误"),
-    USER_PASSWORD_EXPIRED(1008,"fail","账号过期"),
-    USER_ACCOUNT_DISABLE(1009,"fail","账号禁用"),
-    USER_ACCOUNT_LOCKED(1010,"fail","账号锁定"),
-    USER_ACCOUNT_NOT_EXIST(1011,"fail","账号不存在"),
-    SERVICE_SQL_EXCEPTION(1012,"error","该 SQL 无法执行，请检查 SQL 语法或者查看表是否存在"),
-    NO_EXEIT_WHERE_KEY(1013,"error","不存在 where 条件的主键");
+    USER_ACCOUNT_EXISTED(1005, "fail", "用户名已存在"),
+    USER_ACCOUNT_EXPIRED(1006, "fail", "账号过期"),
+    USERNAME_PASSWORD_ERROR(1007, "fail", "用户名或密码错误"),
+    USER_PASSWORD_EXPIRED(1008, "fail", "账号过期"),
+    USER_ACCOUNT_DISABLE(1009, "fail", "账号禁用"),
+    USER_ACCOUNT_LOCKED(1010, "fail", "账号锁定"),
+    USER_ACCOUNT_NOT_EXIST(1011, "fail", "账号不存在"),
+    SERVICE_SQL_EXCEPTION(1012, "error", "该 SQL 无法执行，请检查 SQL 语法或者查看表是否存在"),
+    NO_EXEIT_WHERE_KEY(1013, "error", "主键不存在"),
+    NO_EXEIT_WHERE_DATA(1013, "error", "数据不存在"),
+    NO_EXEIT_TABLE(1013, "error", "表名不存在");
 
     private Integer code;
 

@@ -6,15 +6,12 @@ import cn.youngkbt.generic.http.HttpResult;
 import cn.youngkbt.generic.http.Response;
 import cn.youngkbt.generic.valid.ValidList;
 import cn.youngkbt.generic.vo.ConditionVo;
-import cn.youngkbt.generic.vo.GenericServiceVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.springframework.beans.BeanUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,19 +48,8 @@ public class GenericServiceController {
     public Response queryGenericServiceListPages(GenericService genericService, @RequestParam(defaultValue = "1", required = false) Integer pageNo, @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
         IPage<GenericService> page = new Page<>(pageNo, pageSize);
         IPage<GenericService> serviceListPages = genericServiceService.queryGenericServiceListPages(page, genericService);
-        List<GenericServiceVo> serviceVoList = new ArrayList<>();
         List<GenericService> records = serviceListPages.getRecords();
-        records.forEach(item -> {
-            GenericServiceVo serviceVo = new GenericServiceVo();
-            BeanUtils.copyProperties(item, serviceVo);
-            if (item.getStatus() == 0) {
-                serviceVo.setStatus("禁用");
-            } else if (item.getStatus() == 1) {
-                serviceVo.setStatus("启用");
-            }
-            serviceVoList.add(serviceVo);
-        });
-        return HttpResult.ok(serviceVoList);
+        return HttpResult.ok(records);
     }
 
     @GetMapping("/queryGenericServiceConditionsPages")

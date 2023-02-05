@@ -114,7 +114,8 @@ public class ServiceColServiceImpl extends ServiceImpl<ServiceColMapper, Service
             for (int i = 1; i <= metaData.getColumnCount(); i++) {
                 ServiceCol serviceCol = new ServiceCol();
                 serviceCol.setTableCol(metaData.getColumnName(i));
-                serviceCol.setColType(metaData.getColumnTypeName(i).toLowerCase());
+                String columnType = this.getTypeNameByColumn(metaData.getColumnTypeName(i).toLowerCase());
+                serviceCol.setColType(columnType);
                 serviceCol.setColLength(metaData.getPrecision(i));
                 // 转为小驼峰
                 String lowerCamelCase = StringUtils.columnToLowerCamelCase(metaData.getColumnName(i));
@@ -169,6 +170,28 @@ public class ServiceColServiceImpl extends ServiceImpl<ServiceColMapper, Service
 
     protected void closeNativeSqlSession(SqlSession sqlSession) {
         SqlSessionUtils.closeSqlSession(sqlSession, sqlSessionTemplate.getSqlSessionFactory());
+    }
+
+    protected String getTypeNameByColumn(String columnTypeName) {
+        if (columnTypeName.contains("int") || columnTypeName.equals("number")) {
+            return "Integer";
+        } else if (columnTypeName.contains("double")) {
+            return "Double";
+        } else if (columnTypeName.contains("float")) {
+            return "Float";
+        } else if (columnTypeName.equals("date")) {
+            return "Date";
+        } else if (columnTypeName.equals("dateTime")) {
+            return "DateTime";
+        } else if (columnTypeName.equals("timestamp")) {
+            return "TimeStamp";
+        } else if (columnTypeName.contains("blob")) {
+            return "Blob";
+        } else if (columnTypeName.contains("text")) {
+            return "Text";
+        } else {
+            return "String";
+        }
     }
 
 }

@@ -47,7 +47,7 @@ public class GenericApiServiceImpl implements GenericApiService {
         genericService.setProjectId(project.getId());
         genericService.setServiceUrl(serviceUrl);
         GenericService service = genericServiceService.queryOneGenericService(genericService);
-        Assert.isTrue(service.getStatus() == 0, "该接口已被禁用");
+        Assert.isTrue(service.getStatus() == 1, "该接口已被禁用");
         String selectSql = service.getSelectSql();
         String selectTable = service.getSelectTable();
         List<LinkedHashMap<String, Object>> list = new ArrayList<>();
@@ -95,12 +95,14 @@ public class GenericApiServiceImpl implements GenericApiService {
             // submitType 如果在表单里
             String submitType = (String) data.get("submitType");
             if (StringUtils.isNotBlank(submitType)) {
-                List<HashMap<String, Object>> dataAndKeyList = this.processMappingForOperate(serviceColList, data);
+                List<HashMap<String, Object>> dataAndKeyList = this.processMappingForOperate(serviceColList, data, submitType);
                 String sql = this.getOperateSql(service, dataAndKeyList, submitType);
                 Integer result = genericApiMapper.genericOperate(sql);
                 if (result != 0) {
                     return "操作成功";
                 }
+            } else {
+                return "请选择操作类型：insert、update、delete";
             }
         }
         // JSON（支持批量）
@@ -119,25 +121,38 @@ public class GenericApiServiceImpl implements GenericApiService {
                 for (Map.Entry<String, Object> entry : map.entrySet()) {
                     if (serviceCol.getTableCol().equals(entry.getKey())) {
                         isMatch = true;
+                        Object value = "";
                         // 处理日期格式：2022-12-10T13:32:14.000+00:00 转为 yyyy:MM:dd HH:mm:ss
                         if (entry.getValue() instanceof Timestamp) {
                             DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault());
                             Timestamp time = (Timestamp) (entry.getValue());
-                            tempMap.put(serviceCol.getJsonCol(), dateFormat.format(time.toLocalDateTime()));
+                            value = dateFormat.format(time.toLocalDateTime());
                         } else {
-                            tempMap.put(serviceCol.getJsonCol(), entry.getValue());
+                            value = entry.getValue();
                         }
                         if (StringUtils.isNotBlank(from) && from.equals("report")) {
+                            // if (serviceCol.getAllowShowInReport() == 1) {
+                            tempMap.put(serviceCol.getJsonCol(), value);
                             tempMap.put("_" + serviceCol.getJsonCol() + "GenericReportSetting", serviceCol);
+                            // }
+                        } else {
+                            tempMap.put(serviceCol.getJsonCol(), value);
                         }
                         break;
                     } else {
                         isMatch = false;
                     }
                 }
-                // serviceColList 存在的，list 里不存在，但是也要添加进去 tempList
+                // serviceColList 存在的，list 里不存在，但是也要添加进去 tempMap
                 if (!isMatch) {
-                    tempMap.put(serviceCol.getJsonCol(), "");
+                    if (StringUtils.isNotBlank(from) && from.equals("report")) {
+                        if (serviceCol.getAllowShowInReport() == 1) {
+                            tempMap.put(serviceCol.getJsonCol(), "");
+                            tempMap.put("_" + serviceCol.getJsonCol() + "GenericReportSetting", serviceCol);
+                        }
+                    } else {
+                        tempMap.put(serviceCol.getJsonCol(), "");
+                    }
                 }
             }
             tempList.add(tempMap);
@@ -150,7 +165,7 @@ public class GenericApiServiceImpl implements GenericApiService {
      * tempMap：单行数据
      * keyMap：主键数据
      */
-    public List<HashMap<String, Object>> processMappingForOperate(List<ServiceCol> serviceColList, HashMap<String, Object> map) {
+    public List<HashMap<String, Object>> processMappingForOperate(List<ServiceCol> serviceColList, HashMap<String, Object> map, String submitType) {
         List<HashMap<String, Object>> list = new ArrayList<>();
         // 单行数据
         HashMap<String, Object> dataMap = new HashMap<>(16);
@@ -161,9 +176,18 @@ public class GenericApiServiceImpl implements GenericApiService {
         for (ServiceCol serviceCol : serviceColList) {
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 if (serviceCol.getJsonCol().equals(entry.getKey())) {
-                    if (serviceCol.getIsWhereKey() == 1 && !"".equals(entry.getValue())) {
+                    // allowInsert、allowUpdate 判断
+                    if ("insert".equalsIgnoreCase(submitType) && serviceCol.getAllowInsert() == 0) {
+                        break;
+                    } else if ("update".equalsIgnoreCase(submitType) && serviceCol.getAllowUpdate() == 0 && serviceCol.getIsWhereKey() == 0) { // 主键不能 break 掉
+                        break;
+                    }
+                    // 1 代表一定添加到 map，2 代表如果值为空，则不添加到 map，0 代表不添加
+                    if (serviceCol.getIsWhereKey() == 1) {
                         keyMap.put(serviceCol.getTableCol(), entry.getValue());
-                    } else {
+                    } else if (serviceCol.getIsWhereKey() == 2 && !"".equals(entry.getValue())) {
+                        keyMap.put(serviceCol.getTableCol(), entry.getValue());
+                    } else if (serviceCol.getIsWhereKey() == 0) {
                         dataMap.put(serviceCol.getTableCol(), entry.getValue());
                     }
                     typeMap.put(serviceCol.getTableCol(), serviceCol.getColType());
@@ -184,12 +208,15 @@ public class GenericApiServiceImpl implements GenericApiService {
         // TODO：执行 insert、update、delete 时候，判断数据的类型来赋值
         HashMap<String, Object> typeMap = dataAndKeyList.get(2);
         if (("insert").equalsIgnoreCase(submitType)) {
-            sql.append("INSERT INTO ").append(service.getInsertTable());
+            String insertTable = service.getInsertTable();
+            if (StringUtils.isBlank(insertTable)) {
+                throw new GenericException(ResponseStatusEnum.NO_EXEIT_TABLE);
+            } else if (dataMap.size() == 0) {
+                throw new GenericException(ResponseStatusEnum.NO_EXEIT_WHERE_DATA);
+            }
+            sql.append("INSERT INTO ").append(insertTable);
             sql.append("(");
             dataMap.forEach((key, value) -> {
-                sql.append(key).append(",");
-            });
-            keyMap.forEach((key, value) -> {
                 sql.append(key).append(",");
             });
             sql.deleteCharAt(sql.length() - 1);
@@ -200,31 +227,38 @@ public class GenericApiServiceImpl implements GenericApiService {
             sql.deleteCharAt(sql.length() - 1);
             sql.append(")");
         } else if (("update").equalsIgnoreCase(submitType)) {
-            if (keyMap.size() > 0) {
-                sql.append("UPDATE ").append(service.getUpdateTable()).append(" SET ");
-                dataMap.forEach((key, value) -> {
-                    sql.append(key).append(" = '").append(value).append("', ");
-                });
-                sql.delete(sql.length() - 2, sql.length());
-                sql.append(" WHERE ");
-                keyMap.forEach((key, value) -> {
-                    sql.append(key).append(" = '").append(value).append("' and ");
-                });
-                sql.delete(sql.length() - 5, sql.length());
-            } else {
+            String updateTable = service.getUpdateTable();
+            if (StringUtils.isBlank(updateTable)) {
+                throw new GenericException(ResponseStatusEnum.NO_EXEIT_TABLE);
+            } else if (keyMap.size() == 0) {
                 throw new GenericException(ResponseStatusEnum.NO_EXEIT_WHERE_KEY);
+            } else if (dataMap.size() == 0) {
+                throw new GenericException(ResponseStatusEnum.NO_EXEIT_WHERE_DATA);
             }
+            sql.append("UPDATE ").append(service.getUpdateTable()).append(" SET ");
+            dataMap.forEach((key, value) -> {
+                sql.append(key).append(" = '").append(value).append("', ");
+            });
+            sql.delete(sql.length() - 2, sql.length());
+            sql.append(" WHERE ");
+            keyMap.forEach((key, value) -> {
+                sql.append(key).append(" = '").append(value).append("' and ");
+            });
+            sql.delete(sql.length() - 5, sql.length());
         } else if (("delete").equalsIgnoreCase(submitType)) {
-            if (keyMap.size() > 0) {
-                sql.append("DELETE ").append(service.getDeleteTable());
-                sql.append(" WHERE ");
-                keyMap.forEach((key, value) -> {
-                    sql.append(key).append(" = '").append(value).append("' and ");
-                });
-                sql.delete(sql.length() - 5, sql.length());
-            } else {
+            String deleteTable = service.getDeleteTable();
+            if (StringUtils.isBlank(deleteTable)) {
+                throw new GenericException(ResponseStatusEnum.NO_EXEIT_TABLE);
+            } else if (keyMap.size() == 0) {
                 throw new GenericException(ResponseStatusEnum.NO_EXEIT_WHERE_KEY);
             }
+            sql.append("DELETE FROM ").append(service.getDeleteTable());
+            sql.append(" WHERE ");
+            keyMap.forEach((key, value) -> {
+                sql.append(key).append(" = '").append(value).append("' and ");
+            });
+            sql.delete(sql.length() - 5, sql.length());
+
         }
         return sql.toString();
     }
