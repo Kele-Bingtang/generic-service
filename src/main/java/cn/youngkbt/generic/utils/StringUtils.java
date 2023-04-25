@@ -22,11 +22,11 @@ public class StringUtils {
 
     public static boolean isBlank(String... content) {
         for (String s : content) {
-            if (isBlank(s)) {
-                return true;
+            if (!isBlank(s)) {
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     /**

@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @date 2022/4/30 14:47
  * @note 响应对象
  */
-public class Response implements Serializable {
+public class Response<T> implements Serializable {
     private static final long serialVersionUID = -464624820023286858L;
     /** 自定义状态码 **/
     private Integer code;
@@ -16,7 +16,7 @@ public class Response implements Serializable {
     /** 消息 **/
     private String message;
     /** 数据 **/
-    protected transient Object data;
+    protected transient T data;
 
     public Integer getCode() {
         return code;
@@ -42,11 +42,11 @@ public class Response implements Serializable {
         this.message = message;
     }
 
-    public Object getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 

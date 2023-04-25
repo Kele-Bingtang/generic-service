@@ -1,7 +1,6 @@
 package cn.youngkbt.generic.http;
 
 
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,21 +10,31 @@ import java.util.Map;
  * @note 请求响应封装
  */
 public class HttpResult {
-    
-    private HttpResult() {}
-    
-    public static Response processResult(Object data, ResponseStatusEnum status) {
-        Response response = new Response();
+
+    private HttpResult() {
+    }
+
+    public static <T> Response<T> response(T data, ResponseStatusEnum responseStatusEnum) {
+        Response<T> response = new Response<>();
         response.setData(data);
-        response.setCode(status.getCode());
-        response.setStatus(status.getStatus());
-        response.setMessage(status.getMessage());
+        response.setCode(responseStatusEnum.getCode());
+        response.setStatus(responseStatusEnum.getStatus());
+        response.setMessage(responseStatusEnum.getMessage());
         return response;
     }
 
-    public static Response processResult(String key, Object data, ResponseStatusEnum status) {
-        Map<String, Object> map = new HashMap<>();
-        Response response = new Response();
+    public static <T> Response<T> response(T data, ResponseStatusEnum responseStatusEnum, String message) {
+        Response<T> response = new Response<>();
+        response.setData(data);
+        response.setCode(responseStatusEnum.getCode());
+        response.setStatus(responseStatusEnum.getStatus());
+        response.setMessage(message);
+        return response;
+    }
+
+    public static <T> Response<Map<String, T>> response(String key, T data, ResponseStatusEnum status) {
+        Map<String, T> map = new HashMap<>(16);
+        Response<Map<String, T>> response = new Response<>();
         map.put(key, data);
         response.setData(map);
         response.setCode(status.getCode());
@@ -34,28 +43,28 @@ public class HttpResult {
         return response;
     }
 
-    public static Response processResult(Object data, Integer code, String codeMessage, String message) {
-        Response response = new Response();
+    public static <T> Response<T> response(T data, Integer code, String status, String message) {
+        Response<T> response = new Response<>();
         response.setData(data);
         response.setCode(code);
-        response.setStatus(codeMessage);
+        response.setStatus(status);
         response.setMessage(message);
         return response;
     }
 
-    public static Response processResult(String key, Object data, Integer code, String codeMessage, String message) {
-        Map<String, Object> map = new HashMap<>();
-        Response response = new Response();
+    public static <T> Response<Map<String, T>> response(String key, T data, Integer code, String status, String message) {
+        Map<String, T> map = new HashMap<>(16);
+        Response<Map<String, T>> response = new Response<>();
         map.put(key, data);
         response.setData(map);
         response.setCode(code);
-        response.setStatus(codeMessage);
+        response.setStatus(status);
         response.setMessage(message);
         return response;
     }
 
-    public static Response ok(Object data) {
-        Response response = new Response();
+    public static <T> Response<T> ok(T data) {
+        Response<T> response = new Response<>();
         response.setData(data);
         response.setCode(ResponseStatusEnum.SUCCESS.getCode());
         response.setStatus(ResponseStatusEnum.SUCCESS.getStatus());
@@ -63,9 +72,9 @@ public class HttpResult {
         return response;
     }
 
-    public static Response ok(String key, Object data) {
-        Map<String, Object> map = new HashMap<>();
-        Response response = new Response();
+    public static <T> Response<Map<String, T>> ok(String key, T data) {
+        Map<String, T> map = new HashMap<>(16);
+        Response<Map<String, T>> response = new Response<>();
         map.put(key, data);
         response.setData(map);
         response.setCode(ResponseStatusEnum.SUCCESS.getCode());
@@ -74,8 +83,17 @@ public class HttpResult {
         return response;
     }
 
-    public static Response fail(Object data) {
-        Response response = new Response();
+    public static Response<String> okMessage(String message) {
+        Response<String> response = new Response<>();
+        response.setData(null);
+        response.setCode(ResponseStatusEnum.SUCCESS.getCode());
+        response.setStatus(ResponseStatusEnum.SUCCESS.getStatus());
+        response.setMessage(message);
+        return response;
+    }
+
+    public static <T> Response<T> fail(T data) {
+        Response<T> response = new Response<>();
         response.setData(data);
         response.setCode(ResponseStatusEnum.FAIL.getCode());
         response.setStatus(ResponseStatusEnum.FAIL.getStatus());
@@ -83,9 +101,9 @@ public class HttpResult {
         return response;
     }
 
-    public static Response fail(String key, Object data) {
-        Map<String, Object> map = new HashMap<>();
-        Response response = new Response();
+    public static <T> Response<Map<String, T>> fail(String key, T data) {
+        Map<String, T> map = new HashMap<>(16);
+        Response<Map<String, T>> response = new Response<>();
         map.put(key, data);
         response.setData(map);
         response.setCode(ResponseStatusEnum.FAIL.getCode());
@@ -93,9 +111,18 @@ public class HttpResult {
         response.setMessage(ResponseStatusEnum.FAIL.getMessage());
         return response;
     }
+    
+    public static Response<String> failMessage(String message) {
+        Response<String> response = new Response<>();
+        response.setData(null);
+        response.setCode(ResponseStatusEnum.FAIL.getCode());
+        response.setStatus(ResponseStatusEnum.FAIL.getStatus());
+        response.setMessage(message);
+        return response;
+    }
 
-    public static Response error(Object data) {
-        Response response = new Response();
+    public static <T> Response<T> error(T data) {
+        Response<T> response = new Response<>();
         response.setData(data);
         response.setCode(ResponseStatusEnum.ERROR.getCode());
         response.setStatus(ResponseStatusEnum.ERROR.getStatus());
@@ -103,9 +130,9 @@ public class HttpResult {
         return response;
     }
 
-    public static Response error(String key, Object data) {
-        Map<String, Object> map = new HashMap<>();
-        Response response = new Response();
+    public static <T> Response<Map<String, T>> error(String key, T data) {
+        Map<String, T> map = new HashMap<>(16);
+        Response<Map<String, T>> response = new Response<>();
         map.put(key, data);
         response.setData(map);
         response.setCode(ResponseStatusEnum.ERROR.getCode());
@@ -114,11 +141,27 @@ public class HttpResult {
         return response;
     }
 
-    public static Response okOrFail(Object data) {
-        if(null == data) {
-            return fail(null);
+    public static Response<String> errorMessage(String message) {
+        Response<String> response = new Response<>();
+        response.setData(null);
+        response.setCode(ResponseStatusEnum.ERROR.getCode());
+        response.setStatus(ResponseStatusEnum.ERROR.getStatus());
+        response.setMessage(message);
+        return response;
+    }
+
+    public static <T> Response<T> okOrFail(T data, String message) {
+        if (null == data) {
+            return response(null, ResponseStatusEnum.FAIL, ResponseStatusEnum.FAIL.getMessage());
         }
-        return ok(data);
+        return response(data, ResponseStatusEnum.SUCCESS, message);
     }
-    
+
+    public static <T> Response<T> okOrFail(T data) {
+        if (null == data) {
+            return response(null, ResponseStatusEnum.FAIL);
+        }
+        return response(null, ResponseStatusEnum.SUCCESS);
+    }
+
 }

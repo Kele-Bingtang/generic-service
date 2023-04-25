@@ -1,7 +1,7 @@
 package cn.youngkbt.generic.security;
 
-import cn.youngkbt.generic.base.model.GenericUser;
-import cn.youngkbt.generic.base.service.GenericUserService;
+import cn.youngkbt.generic.base.service.UserService;
+import cn.youngkbt.generic.base.vo.UserVO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -23,11 +23,11 @@ import java.util.List;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Resource
-    private GenericUserService genericUserService;
+    private UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        GenericUser user = genericUserService.findByUsername(username);
+        UserVO user = userService.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("用户名或密码错误");
         }

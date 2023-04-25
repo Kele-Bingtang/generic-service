@@ -3,6 +3,7 @@ package cn.youngkbt.generic.config;
 import cn.youngkbt.generic.http.annotation.resolver.RequestUriArgumentResolver;
 import cn.youngkbt.generic.http.annotation.resolver.RequestUrlArgumentResolver;
 import cn.youngkbt.generic.log.LogInterceptor;
+import cn.youngkbt.generic.security.SecurityInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -39,16 +40,23 @@ public class WebConfigurerAdapter implements WebMvcConfigurer {
         return new LogInterceptor();
     }
 
+    @Bean
+    public SecurityInterceptor securityInterceptor() {
+        return new SecurityInterceptor();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(logInterceptor());
-        // 可以具体制定哪些需要拦截，哪些不拦截，其实也可以使用自定义注解更灵活完成
-        //        .addPathPatterns("/**")
-        //       .excludePathPatterns("/test.html");
+        registry.addInterceptor(securityInterceptor())
+                .addPathPatterns("/project/**", "/category/**", "/service/**", "/field/**", "/report/**", "/serviceCol/**",
+                        "/user/queryMemberInProject/**", "/user/queryAllMemberNotInProject/**", "/user/updateUserRole", "/user/insertUserProject/**", "/user/removeOneMember")
+                .excludePathPatterns("/project/query*/**", "/generic-api/**");
     }
 
     /**
      * 添加自定义注解
+     *
      * @param resolvers initially an empty list
      */
     @Override

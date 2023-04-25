@@ -1,7 +1,8 @@
 package cn.youngkbt.generic.base.service;
 
+import cn.youngkbt.generic.base.dto.serviceCol.*;
 import cn.youngkbt.generic.base.model.ServiceCol;
-import cn.youngkbt.generic.vo.ConditionVo;
+import cn.youngkbt.generic.base.vo.ServiceColVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -17,41 +18,36 @@ import java.util.List;
 public interface ServiceColService extends IService<ServiceCol> {
 
 	/**
-	 * 根据 ID 查询一条数据
-	 * @param conditionVos 查询条件
-	 * @return 根据 ID 查询出的实体对象
-	 */
-	public List<ServiceCol> queryServiceColByConditions(List<ConditionVo> conditionVos);
-	
-	/**
 	 * 查询所有数据
 	 * @return 所有数据的实体对象集合
 	 */
-	public List<ServiceCol> queryServiceColList(ServiceCol serviceCol);
+	public List<ServiceColVO> queryServiceColList(ServiceColQueryDTO serviceColQueryDTO);
 
-	public IPage<ServiceCol> queryServiceColListPage(IPage<ServiceCol> page, ServiceCol serviceCol);
+	public List<ServiceColVO> queryServiceColListPage(IPage<ServiceCol> page, ServiceColQueryDTO serviceColQueryDTO);
 	
 	/**
 	 * 插入一条数据
-	 * @param serviceCol 实体对象
+	 * @param serviceColInsertDTO 实体对象
 	 * @return 插入的数据
 	 */
-	public ServiceCol insertServiceCol(ServiceCol serviceCol);
+	public String insertServiceCol(ServiceColInsertDTO serviceColInsertDTO);
 	
 	/**
 	 * 更新一条数据
 	 *
-	 * @param serviceCol 实体对象
+	 * @param serviceColUpdateDTO 实体对象
 	 * @return 更新的数据
 	 */
-	public ServiceCol updateServiceCol(ServiceCol serviceCol);
+	public String updateServiceCol(ServiceColUpdateDTO serviceColUpdateDTO);
+
+	String updateBatchServiceCol(ServiceColBatchUpdateDTO batchUpdateDTO);
 	
 	/**
 	 * 根据 ID 删除一条数据
-	 * @param serviceCol 实体对象
+	 * @param serviceColDeleteDTO 实体对象
 	 * @return 删除的数据
 	 */
-	public ServiceCol deleteServiceColById(ServiceCol serviceCol);
+	public String deleteServiceColById(ServiceColDeleteDTO serviceColDeleteDTO);
 	
 	/**
 	 * 根据 指定字段名 删除一条数据
@@ -68,6 +64,9 @@ public interface ServiceColService extends IService<ServiceCol> {
 	public int deleteServiceColByIds(List<Integer> ids);
 
 	public boolean queryColumnInfoAndInsert(Integer serviceId, String selectSql);
+	
+	public Integer queryColumnInfoAndUpdate(Integer serviceId, String selectSql);
+	public Integer queryColumnInfoAndDelete(Integer serviceId, String selectSql);
 
 	public ResultSetMetaData executeSql(String sql);
 

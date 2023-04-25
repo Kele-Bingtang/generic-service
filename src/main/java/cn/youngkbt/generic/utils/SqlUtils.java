@@ -1,6 +1,6 @@
 package cn.youngkbt.generic.utils;
 
-import cn.youngkbt.generic.base.mapper.GenericApiMapper;
+import cn.youngkbt.generic.base.mapper.ApiMapper;
 import cn.youngkbt.generic.config.ApplicationContextHelper;
 
 import java.lang.reflect.Field;
@@ -15,7 +15,7 @@ import java.util.*;
  */
 public class SqlUtils {
 
-    private static GenericApiMapper genericApiMapper = ApplicationContextHelper.getBeanByClass(GenericApiMapper.class);
+    private static ApiMapper apiMapper = ApplicationContextHelper.getBeanByClass(ApiMapper.class);
 
     /**
      * 传入查询 sql、实体类对象的 class，返回 list 实体类集合
@@ -30,7 +30,7 @@ public class SqlUtils {
         // 获得 pojo 所有字段名
         Field[] fields = pojo.getDeclaredFields();
         // 查询数据库得到结果集
-        List<LinkedHashMap<String, Object>> linkedHashMapsList = genericApiMapper.genericSelect(sql);
+        List<LinkedHashMap<String, Object>> linkedHashMapsList = apiMapper.genericSelect(sql);
         if("java.util.Map".equals(pojo.getTypeName())) {
             return (List<T>) linkedHashMapsList;
         }

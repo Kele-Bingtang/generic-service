@@ -46,7 +46,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         }
         LOGGER.error("Exception：{}", responseStatusEnum.getMessage());
         // 将错误信息转换成 JSON
-        writer.println(new ObjectMapper().writeValueAsString(HttpResult.processResult(null, responseStatusEnum)));
+        writer.println(new ObjectMapper().writeValueAsString(HttpResult.response(null, responseStatusEnum)));
         writer.flush();
         writer.close();
     }

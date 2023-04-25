@@ -1,8 +1,6 @@
 package cn.youngkbt.generic.config;
 
-import cn.youngkbt.generic.security.JwtAuthenticationFilter;
-import cn.youngkbt.generic.security.LoginFailureHandler;
-import cn.youngkbt.generic.security.LoginSuccessHandler;
+import cn.youngkbt.generic.security.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
 import javax.annotation.Resource;
 
@@ -51,13 +48,13 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter {
                 // 其他所有请求需要身份认证
                 .anyRequest().authenticated()
                 .and().headers().frameOptions().disable()
-                .and().formLogin()
+                .and().formLogin().loginPage("/login").loginProcessingUrl("/login")
                 // 登录成功后的返回结果
                 .successHandler(new LoginSuccessHandler())
                 //登录失败后的返回结果
                 .failureHandler(new LoginFailureHandler())
                 // 退出登录处理器
-                .and().logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
+                .and().logout().logoutUrl("/logout").logoutSuccessHandler(new LogoutSuccessHandler());
         
         // token 验证过滤器
         http.addFilterBefore(new JwtAuthenticationFilter(super.authenticationManager()), UsernamePasswordAuthenticationFilter.class);

@@ -13,7 +13,7 @@ import java.sql.Timestamp;
  * @note 1.0
  */
 @Data
-@TableName("user_project")
+@TableName("generic.user_project")
 public class UserProject {
 	/**
 	 * 主键

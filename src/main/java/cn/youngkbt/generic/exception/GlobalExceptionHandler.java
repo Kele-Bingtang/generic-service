@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
         // 获取实体类定义的校验注解字段上的 message 作为异常信息，@NotBlank(message = "用户密码不能为空！")，异常信息即为"用户密码不能为空！
         String defaultMessage = e.getBindingResult().getFieldError().getDefaultMessage();
         LOGGER.error("BindException：{}", defaultMessage);
-        return HttpResult.processResult(null, ResponseStatusEnum.VALIDATION_ERROR.getCode(), ResponseStatusEnum.VALIDATION_ERROR.getStatus(), defaultMessage);
+        return HttpResult.response(null, ResponseStatusEnum.VALIDATION_ERROR.getCode(), ResponseStatusEnum.VALIDATION_ERROR.getStatus(), defaultMessage);
     }
 
     /**
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
         assert fieldError != null;
         String defaultMessage = fieldError.getDefaultMessage();
         LOGGER.error("MethodArgumentNotValidException：{}", defaultMessage);
-        return HttpResult.processResult(null, ResponseStatusEnum.VALIDATION_ERROR.getCode(), ResponseStatusEnum.VALIDATION_ERROR.getStatus(), defaultMessage);
+        return HttpResult.response(null, ResponseStatusEnum.VALIDATION_ERROR.getCode(), ResponseStatusEnum.VALIDATION_ERROR.getStatus(), defaultMessage);
     }
 
     /**
@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
     public Response handleValidationException(ValidationException e) {
         String defaultMessage = e.getCause().getMessage();
         LOGGER.error("ValidationException：{}", defaultMessage);
-        return HttpResult.processResult(null, ResponseStatusEnum.VALIDATION_ERROR.getCode(), ResponseStatusEnum.VALIDATION_ERROR.getStatus(), defaultMessage);
+        return HttpResult.response(null, ResponseStatusEnum.VALIDATION_ERROR.getCode(), ResponseStatusEnum.VALIDATION_ERROR.getStatus(), defaultMessage);
     }
 
     /**
@@ -67,7 +67,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public Response handleConstraintViolationException(ConstraintViolationException e) {
         LOGGER.error("ConstraintViolationException：{}", e.getMessage());
-        return HttpResult.processResult(null, ResponseStatusEnum.VALIDATION_ERROR.getCode(), ResponseStatusEnum.VALIDATION_ERROR.getStatus(), e.getMessage());
+        return HttpResult.response(null, ResponseStatusEnum.VALIDATION_ERROR.getCode(), ResponseStatusEnum.VALIDATION_ERROR.getStatus(), e.getMessage());
     }
 
     /**
@@ -77,9 +77,9 @@ public class GlobalExceptionHandler {
     public Response handleConditionSqlException(GenericException e) {
         LOGGER.error("ConstraintViolationException：{}", e.getMessage());
         if (StringUtils.isNotBlank(e.getStatus())) {
-            return HttpResult.processResult(null, e.getCode(), e.getStatus(), e.getMessage());
+            return HttpResult.response(null, e.getCode(), e.getStatus(), e.getMessage());
         }
-        return HttpResult.processResult(null, e.getCode(), "error", e.getMessage());
+        return HttpResult.response(null, e.getCode(), "error", e.getMessage());
     }
 
     /**

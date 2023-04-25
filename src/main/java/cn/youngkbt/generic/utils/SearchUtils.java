@@ -1,6 +1,6 @@
 package cn.youngkbt.generic.utils;
 
-import cn.youngkbt.generic.vo.ConditionVo;
+import cn.youngkbt.generic.base.dto.ConditionDTO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
 import java.util.List;
@@ -15,43 +15,43 @@ public class SearchUtils {
     private SearchUtils() {
     }
 
-    public static <T> QueryWrapper<T> parseWhereSql(List<ConditionVo> conditionList, Class<T> classObj) {
+    public static <T> QueryWrapper<T> parseWhereSql(List<ConditionDTO> conditionList, Class<T> classObj) {
         if(null == conditionList) {
             return null;
         }
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         if (!conditionList.isEmpty()) {
-            for (ConditionVo conditionVo : conditionList) {
-                switch (conditionVo.getType()) {
+            for (ConditionDTO conditionDTO : conditionList) {
+                switch (conditionDTO.getType()) {
                     case "eq":
-                        queryWrapper.eq(conditionVo.getColumn(), conditionVo.getValue());
+                        queryWrapper.eq(conditionDTO.getColumn(), conditionDTO.getValue());
                         break;
                     case "ne":
-                        queryWrapper.ne(conditionVo.getColumn(), conditionVo.getValue());
+                        queryWrapper.ne(conditionDTO.getColumn(), conditionDTO.getValue());
                         break;
                     case "like":
-                        queryWrapper.like(conditionVo.getColumn(), conditionVo.getValue());
+                        queryWrapper.like(conditionDTO.getColumn(), conditionDTO.getValue());
                         break;
                     case "llike":
-                        queryWrapper.likeLeft(conditionVo.getColumn(), conditionVo.getValue());
+                        queryWrapper.likeLeft(conditionDTO.getColumn(), conditionDTO.getValue());
                         break;
                     case "rlike":
-                        queryWrapper.likeRight(conditionVo.getColumn(), conditionVo.getValue());
+                        queryWrapper.likeRight(conditionDTO.getColumn(), conditionDTO.getValue());
                         break;
                     case "notlike":
-                        queryWrapper.notLike(conditionVo.getColumn(), conditionVo.getValue());
+                        queryWrapper.notLike(conditionDTO.getColumn(), conditionDTO.getValue());
                         break;
                     case "gt":
-                        queryWrapper.gt(conditionVo.getColumn(), conditionVo.getValue());
+                        queryWrapper.gt(conditionDTO.getColumn(), conditionDTO.getValue());
                         break;
                     case "lt":
-                        queryWrapper.lt(conditionVo.getColumn(), conditionVo.getValue());
+                        queryWrapper.lt(conditionDTO.getColumn(), conditionDTO.getValue());
                         break;
                     case "ge":
-                        queryWrapper.ge(conditionVo.getColumn(), conditionVo.getValue());
+                        queryWrapper.ge(conditionDTO.getColumn(), conditionDTO.getValue());
                         break;
                     case "le":
-                        queryWrapper.le(conditionVo.getColumn(), conditionVo.getValue());
+                        queryWrapper.le(conditionDTO.getColumn(), conditionDTO.getValue());
                         break;
                     default:
                         break;

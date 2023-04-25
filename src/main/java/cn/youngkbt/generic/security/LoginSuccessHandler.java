@@ -27,8 +27,6 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        // 设置客户端的响应的内容类型
-        response.setContentType("application/json;charset=UTF-8");
 
         // 获取当登录用户信息
         User user = (User) authentication.getPrincipal();
@@ -40,7 +38,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         // 获取输出流
         response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json");
+        // 设置客户端的响应的内容类型
+        response.setContentType("application/json;charset=UTF-8");
         PrintWriter writer = response.getWriter();
         writer.println(new ObjectMapper().writeValueAsString(HttpResult.ok(token)));
         writer.flush();

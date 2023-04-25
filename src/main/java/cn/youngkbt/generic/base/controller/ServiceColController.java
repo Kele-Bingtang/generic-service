@@ -1,14 +1,14 @@
 package cn.youngkbt.generic.base.controller;
 
+import cn.youngkbt.generic.base.dto.serviceCol.*;
 import cn.youngkbt.generic.base.model.GenericService;
 import cn.youngkbt.generic.base.model.ServiceCol;
-import cn.youngkbt.generic.base.service.GenericServiceService;
 import cn.youngkbt.generic.base.service.ServiceColService;
+import cn.youngkbt.generic.base.service.ServiceService;
+import cn.youngkbt.generic.base.vo.ServiceColVO;
 import cn.youngkbt.generic.http.HttpResult;
 import cn.youngkbt.generic.http.Response;
 import cn.youngkbt.generic.utils.ObjectUtils;
-import cn.youngkbt.generic.valid.ValidList;
-import cn.youngkbt.generic.vo.ConditionVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.validation.annotation.Validated;
@@ -28,60 +28,89 @@ import java.util.List;
 @Validated
 public class ServiceColController {
 
-	@Resource
-	private ServiceColService serviceColService;
-	@Resource
-	private GenericServiceService genericServiceService;
+    @Resource
+    private ServiceColService serviceColService;
+    @Resource
+    private ServiceService serviceService;
 
-	@GetMapping("/queryServiceColByConditions")
-	public Response queryServiceColByConditions(@Validated @RequestBody ValidList<ConditionVo> conditionVos) {
-		List<ServiceCol> colList = serviceColService.queryServiceColByConditions(conditionVos);
-		return HttpResult.ok(colList);
-	}
+    @GetMapping("/queryServiceColList")
+    public Response<List<ServiceColVO>> queryServiceColList(@Validated ServiceColQueryDTO serviceColQueryDTO) {
+        List<ServiceColVO> serviceColList = serviceColService.queryServiceColList(serviceColQueryDTO);
+        return HttpResult.ok(serviceColList);
+    }
 
-	@GetMapping("/queryServiceColList")
-	public Response queryServiceColList(@Validated ServiceCol serviceCol) {
-		List<ServiceCol> colList = serviceColService.queryServiceColList(serviceCol);
-		return HttpResult.ok(colList);
-	}
+    @GetMapping("/queryServiceColListPages")
+    public Response<List<ServiceColVO>> queryServiceColListPages(@Validated ServiceColQueryDTO serviceColQueryDTO,
+                                                                 @RequestParam(defaultValue = "1", required = false) Integer pageNo,
+                                                                 @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
+        IPage<ServiceCol> page = new Page<>(pageNo, pageSize);
+        List<ServiceColVO> serviceColList = serviceColService.queryServiceColListPage(page, serviceColQueryDTO);
+        return HttpResult.ok(serviceColList);
+    }
 
-	@GetMapping("/queryServiceColListPages")
-	public Response queryServiceColListPages(@Validated ServiceCol serviceCol, @RequestParam(defaultValue = "1", required = false) Integer pageNo, @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
-		IPage<ServiceCol> page = new Page<>(pageNo, pageSize);
-		IPage<ServiceCol> colList = serviceColService.queryServiceColListPage(page, serviceCol);
-		return HttpResult.ok(colList.getRecords());
-	}
+    @PostMapping("/insertServiceCol")
+    public Response<String> insertServiceCol(@Validated @RequestBody ServiceColInsertDTO serviceColInsertDTO) {
+        String result = serviceColService.insertServiceCol(serviceColInsertDTO);
+        return HttpResult.ok(result);
+    }
 
-	@PostMapping("/insertServiceCol")
-	public Response insertServiceCol(@RequestBody ServiceCol serviceCol) {
-		ServiceCol sc = serviceColService.insertServiceCol(serviceCol);
-		return HttpResult.ok(sc);
-	}
+    @PostMapping("/updateServiceCol")
+    public Response<String> updateServiceCol(@Validated @RequestBody ServiceColUpdateDTO serviceColUpdateDTO) {
+        String result = serviceColService.updateServiceCol(serviceColUpdateDTO);
+        return HttpResult.ok(result);
+    }
 
-	@PostMapping("/updateServiceCol")
-	public Response updateServiceCol(@RequestBody ServiceCol serviceCol) {
-		ServiceCol sc = serviceColService.updateServiceCol(serviceCol);
-		return HttpResult.ok(sc);
-	}
+    @PostMapping("/updateBatchServiceCol")
+    public Response<String> updateBatchServiceCol(@Validated @RequestBody ServiceColBatchUpdateDTO batchUpdateDTO) {
+        if (batchUpdateDTO.getJsonColList().isEmpty()) {
+            return HttpResult.error("批量修改的字段不能为空");
+        }
+        if (ObjectUtils.isEmpty(batchUpdateDTO.getAllowInsert()) && ObjectUtils.isEmpty(batchUpdateDTO.getAllowUpdate()) &&
+                ObjectUtils.isEmpty(batchUpdateDTO.getAllowFilter()) && ObjectUtils.isEmpty(batchUpdateDTO.getAllowRequest())
+        ) {
+            return HttpResult.error("批量修改的字段不能为空");
+        }
 
-	@PostMapping("/deleteServiceColById")
-	public Response deleteServiceColById(@RequestBody ServiceCol serviceCol) {
-		ServiceCol sc = serviceColService.deleteServiceColById(serviceCol);
-		return HttpResult.ok(sc);
-	}
-	
-	@PostMapping(value = "/updateColumn", headers = {"content-type=application/x-www-form-urlencoded"})
-	public Response updateColumn(@NotNull(message = "请传入接口信息") Integer serviceId) {
-		GenericService genericService = genericServiceService.queryGenericServiceById(serviceId);
-		if(ObjectUtils.isEmpty(genericService) || ObjectUtils.isEmpty(genericService.getId())) {
-			return HttpResult.fail("接口信息不存在");
-		}
-		boolean isSuccess = serviceColService.queryColumnInfoAndInsert(serviceId, genericService.getSelectSql());
-		if(isSuccess) {
-			return HttpResult.ok("更新成功");
-		}else {
-			return HttpResult.fail("更新失败");
-		}
-	}
+        String result = serviceColService.updateBatchServiceCol(batchUpdateDTO);
+        return HttpResult.ok(result);
+    }
+
+    @PostMapping("/deleteServiceColById")
+    public Response<String> deleteServiceColById(@Validated @RequestBody ServiceColDeleteDTO serviceColDeleteDTO) {
+        String result = serviceColService.deleteServiceColById(serviceColDeleteDTO);
+        return HttpResult.ok(result);
+    }
+
+    @PostMapping(value = "/updateColumn/{serviceId}")
+    public Response<String> updateColumn(@NotNull(message = "请传入接口信息") @PathVariable Integer serviceId) {
+        GenericService genericService = serviceService.queryGenericServiceById(serviceId);
+        if (ObjectUtils.isEmpty(genericService) || ObjectUtils.isEmpty(genericService.getId())) {
+            return HttpResult.fail("接口信息不存在");
+        }
+        Integer length = serviceColService.queryColumnInfoAndUpdate(serviceId, genericService.getSelectSql());
+        if (length > 0) {
+            return HttpResult.okMessage("更新成功，更新了 " + length + " 条");
+        } else if (length == 0) {
+            return HttpResult.okMessage("不需要更新，没有新增的字段");
+        } else {
+            return HttpResult.okMessage("更新失败，sql 为空");
+        }
+    }
+
+    @PostMapping(value = "/deleteInvalidColumn/{serviceId}")
+    public Response<String> deleteInvalidColumn(@NotNull(message = "请传入接口信息") @PathVariable Integer serviceId) {
+        GenericService genericService = serviceService.queryGenericServiceById(serviceId);
+        if (ObjectUtils.isEmpty(genericService) || ObjectUtils.isEmpty(genericService.getId())) {
+            return HttpResult.fail("接口信息不存在");
+        }
+        Integer length = serviceColService.queryColumnInfoAndDelete(serviceId, genericService.getSelectSql());
+        if (length > 0) {
+            return HttpResult.okMessage("删除成功，删除了 " + length + " 条");
+        } else if (length == 0) {
+            return HttpResult.okMessage("不需要删除，没有失效的字段");
+        } else {
+            return HttpResult.okMessage("删除失败，sql 为空");
+        }
+    }
 
 }
